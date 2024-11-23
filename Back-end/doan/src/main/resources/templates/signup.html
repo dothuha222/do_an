@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="px-6 py-6">
+        <div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+            <h1 class="mb-6 text-3xl">
+                <b>Biểu mẫu đăng kí nước cho hộ dân tại Hà Nội</b>
+            </h1>
+
+            <form id="signup-form" th:object="${user}" th:method="post" th:action="@{/signup/check-again}">
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2">Tên chủ hộ đăng ký <span
+                            style="color: red">&#160;(*)</span></label>
+                    <input type="text" name="tenChuHo" th:value="${user.tenChuHo}" class="w-full py-2 px-6 rounded-xl"
+                        required th:if="${existederror == null}" maxlength="250" autofocus>
+                    <input type="text" name="tenChuHo" th:value="${user.tenChuHo}" class="w-full py-2 px-6 rounded-xl"
+                        required maxlength="100" th:if="${existederror != null}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2">Số điện thoại <span style="color: red">&#160;(*)</span></label>
+                    <span th:if="${existederror != null}" class="text-red-500 font-bold mb-2 ml-3"><span
+                            th:text="${existederror}"></span></span>
+                    <input type="text" id="sdt" name="sdt" th:value="${user.sdt}" class="w-full py-2 px-6 rounded-xl"
+                        placeholder="Nhập 10 số. Ví dụ: 0123456789" maxlength="10" required>
+                    <span id="sdt-error" class="font-bold text-red-500"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="district" class="inline-block mb-2">Quận/ huyện <span
+                            style="color: red">&#160;(*)</span></label>
+                    <input type="text" name="quanHuyen" maxlength="100" th:value="${user.quanHuyen}" class="w-full py-2 px-6 rounded-xl"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ward" class="inline-block mb-2">Phường/ xã: <span
+                            style="color: red">&#160;(*)</span></label>
+                    <input type="text" name="xaPhuong" maxlength="100" th:value="${user.xaPhuong}" class="w-full py-2 px-6 rounded-xl"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2">Địa chỉ chi tiết <span style="color: red">&#160;(*)</span></label>
+                    <input type="text" name="diaChiChiTiet" th:value="${user.diaChiChiTiet}"
+                        class="w-full py-2 px-6 rounded-xl" maxlength="150" placeholder="Số nhà, Tòa nhà, đường,..." required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2" for="loai">Loại hộ dân <span
+                            style="color: red">&#160;(*)</span></label>
+                    <select th:field="*{loaiHoDan}" id="loai" class="view-select w-full py-2 px-6 rounded-xl">
+                        <option th:each="i: ${dsLoai}" th:value="${i.loai_id}" th:text="${i.ten}"
+                            th:selected="${user != null and i.loai_id == user.loaiHoDan?.loai_id}"></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="inline-block mb-2">Mật khẩu <span style="color: red">&#160;(*)</span></label> <input
+                        type="text" id="password" name="password" maxlength="100" th:value="${user.password}"
+                        class="w-full py-2 px-6 rounded-xl"
+                        placeholder="Ít nhất 8 ký tự, chứa chữ thường, chữ hoa, ký tự đặc biệt, không có khoảng trắng"
+                        required>
+                    <span id="password-error" class="font-bold text-red-500"></span>
+                </div>
+
+                <div class="mb-5">
+                    <label class="inline-block mb-2">Nhập lại mật khẩu</label><span style="color: red">&#160;(*)</span>
+                    <input id="repeatpassword" type="password" maxlength="100" name="repeatpassword" th:value="${repass}"
+                        class="w-full py-2 px-6 rounded-xl" required>
+                    <span id="repeatpassword-error" class="font-bold text-red-500"></span>
+                </div>
+
+                <div class="text-center">
+                    <input type="submit" value="Bước tiếp theo" id="submit-button"
+                        class="py-3 px-3 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white mx-3 font-bold">
+                    <a href="/" class="py-3 px-3 text-lg bg-red-500 hover:bg-red-700 rounded-xl text-white mx-6 font-bold">Về trang chủ</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function (event) {
+            var sdt = document.getElementById('sdt').value;
+            var password = document.getElementById('password').value;
+            var password1 = document.getElementById('repeatpassword').value;
+
+            var isPhoneValid = validatePhoneNumber(sdt);
+            var isPasswordValid = validatePassword(password);
+            var isMatch = validatePassword1(password, password1);
+            console.log(sdt, password, password1, isPhoneValid, isPasswordValid, isMatch)
+            if (isPhoneValid && isPasswordValid && isMatch) {
+                // Gửi form
+                this.submit();
+            } else {
+                if (!isPhoneValid) {
+                    document.getElementById('sdt-error').textContent = 'Số điện thoại không đúng định dạng';
+                } else {
+                    document.getElementById('sdt-error').textContent = '';
+                }
+                if (!isPasswordValid) {
+                    document.getElementById('password-error').textContent = 'Mật khẩu yếu. Nhập mật khẩu mạnh có ít nhất 8 kí tự có chứa cả chữ thường, chữ hoa, số và ký tự đặc biệt.';
+                } else {
+                    document.getElementById('password-error').textContent = '';
+                }
+                if (!isMatch) {
+                    document.getElementById('repeatpassword-error').textContent = 'Mật khẩu nhập lại không khớp';
+                } else {
+                    document.getElementById('repeatpassword-error').textContent = '';
+                }
+                event.preventDefault(); // Ngăn chặn hành vi mặc định của sự kiện submit form
+            }
+        });
+
+        function validatePhoneNumber(phone) {
+            var phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(phone)) {
+                return false;
+            } else {
+                return true
+            }
+        }
+
+        function validatePassword(password) {
+            // Kiểm tra điều kiện mật khẩu mạnh
+            var strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-+=_<>,./?;:'"\\|[\]{}~`])[A-Za-z\d!@#$%^&*()\-+=_<>,./?;:'"\\|[\]{}~`]{8,}$/;
+
+            if (!strongPasswordRegex.test(password)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function validatePassword1(password, confirmPassword) {
+            if (password !== confirmPassword) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+</body>
+
+</html>

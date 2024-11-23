@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hệ thống quản lí nước</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        
+        td {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="px-10 flex items-center border-b border-gray-200">
+        <a href="/" class="font-semibold">
+            <img src="https://phuongnamvina.com/img_data/images/logo-nuoc-uong.jpg"
+                style="height: 80px;" alt="">
+            HỆ THỐNG QUẢN LÝ PHÒNG KHÁM
+
+        </a>
+        <div class="space-x-6 dropdown ml-auto">
+            <a th:if="${session.user == null}" th:href="@{/login}" class="px-6 py-3 text-lg font-bold bg-green-500 hover:bg-green-700 text-white rounded-xl"> Đăng nhập</a>
+            <a th:if="${session.user != null}" th:href="@{/logout}" class="px-6 py-3 text-lg font-bold bg-red-500 hover:bg-red-700 text-white rounded-xl"> Đăng xuất</a>
+            
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li th:if="${session.hodan == null && session.nv == null}"><a class="dropdown-item" href="/login-nv">Đăng nhập bằng tài khoản nhân viên</a></li>
+                <li th:if="${session.hodan == null && session.nv == null}"><a class="dropdown-item" href="/login">Đăng nhập bằng tài khoản hộ dân</a></li>
+                <div class="text-center">
+                	<li th:if="${session.hodan != null || session.nv != null}"><a th:if="${session.hodan != null || session.nv != null}" href="/logout" class="dropdown-item py-2 text-lg font-semibold bg-red-500 hover:bg-red-700 text-white rounded-xl" onclick="return confirm('Bạn chắc chắn muốn đăng xuất?')">Đăng xuất</a></li>
+                </div>
+            </ul>
+        </div>
+    </nav>
+    <div class="text-center">
+    	<p class="text-3xl font-bold py-5">Trang chủ hệ thống</p>
+    </div>
+</body>
+
+</html>
