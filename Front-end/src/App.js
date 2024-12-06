@@ -1,86 +1,400 @@
 
-// import React from 'react';
+
+// import React, { useState } from 'react';
 // import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 // import Login from './components/Login'; // Component đăng nhập
 // import Register from './components/Register'; // Component đăng ký
-// import ReceptionForm from './components/ReceptionForm'; // Component Đơn tiếp nhận
+// import ReceptionForm from './components/ReceptionManage/ReceptionForm'; // Component Đơn tiếp nhận
+// import ReceptionList from './components/ReceptionManage/ReceptionList'; // Component Danh sách tiếp nhận
+// import PatientList from './components/ReceptionManage/PatientList'; // Component Danh sách bệnh nhân
+// import Navbar from './components/ReceptionManage/Navbar'; // Navbar
 
 // const App = () => {
-//   const [isLoggedIn, setIsLoggedIn] = React.useState(true); // Trạng thái đăng nhập
+//   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
+
+//   // Hàm xử lý đăng nhập
+//   const loginHandler = () => setIsAuthenticated(true);
+
+//   // Hàm xử lý đăng xuất
+//   const logoutHandler = () => setIsAuthenticated(false);
 
 //   return (
 //     <Router>
-//       <Routes>
-//         {/* Đường dẫn mặc định là Login */}
-//         <Route
-//           path="/"
-//           element={
-//             isLoggedIn ? (
-//               <Navigate to="/reception-form" replace />
-//             ) : (
-//               <Login setIsLoggedIn={setIsLoggedIn} />
-//             )
-//           }
-//         />
+//       <div>
+//         {/* Chỉ hiển thị Navbar khi đã đăng nhập */}
+//         {isAuthenticated && <Navbar logoutHandler={logoutHandler} />}
 
-//         {/* Đăng ký */}
-//         <Route path="/register" element={<Register />} />
+//         <Routes>
+//           {/* Trang đăng nhập */}
+//           <Route path="/login" element={<Login loginHandler={loginHandler} />} />
 
-//         {/* Giao diện Đơn tiếp nhận */}
-//         <Route
-//           path="/reception-form"
-//           element={
-//             isLoggedIn ? (
-//               <ReceptionForm />
-//             ) : (
-//               <Navigate to="/" replace />
-//             )
-//           }
-//         />
+//           {/* Trang đăng ký */}
+//           <Route path="/register" element={<Register />} />
 
-//         {/* Điều hướng sai đường dẫn về trang đăng nhập */}
-//         <Route path="*" element={<Navigate to="/" />} />
-//       </Routes>
+//           {/* Trang Đơn tiếp nhận */}
+//           <Route
+//             path="/reception-form"
+//             element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách tiếp nhận */}
+//           <Route
+//             path="/reception-list"
+//             element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách bệnh nhân */}
+//           <Route
+//             path="/patient-list"
+//             element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng mặc định */}
+//           <Route
+//             path="/"
+//             element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng sai đường dẫn */}
+//           <Route path="*" element={<Navigate to="/" />} />
+//         </Routes>
+//       </div>
 //     </Router>
 //   );
 // };
 
 // export default App;
 
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import ReceptionForm from '../src/components/ReceptionForm'
-// import ReceptionList from './ReceptionList';
-// import PatientList from './PatientList';
-import Login from '../src/components/Login'
-import Register from '../src/components/Register';
+// import React, { useState } from "react";
+// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// import Login from "./components/Login"; // Component đăng nhập
+// import Register from "./components/Register"; // Component đăng ký
+// import ReceptionForm from "./components/ReceptionManage/ReceptionForm"; // Component Đơn tiếp nhận
+// import ReceptionList from "./components/ReceptionManage/ReceptionList"; // Component Danh sách tiếp nhận
+// import PatientList from "./components/ReceptionManage/PatientList"; // Component Danh sách bệnh nhân
+// import Navbar from "./components/ReceptionManage/Navbar"; // Navbar
+// import Header from "../src/components/Header/Header"; // Header
+
+// const App = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
+
+//   // Hàm xử lý đăng nhập
+//   const loginHandler = () => setIsAuthenticated(false);
+
+//   // Hàm xử lý đăng xuất
+//   const logoutHandler = () => setIsAuthenticated(false);
+
+//   return (
+//     <Router>
+//       <div>
+//         {/* Hiển thị Header và Navbar khi đăng nhập thành công */}
+//         {isAuthenticated && (
+//           <>
+//             <Header logoutHandler={logoutHandler} /> {/* Header luôn hiển thị trên Navbar */}
+//             <Navbar /> {/* Navbar luôn nằm dưới Header */}
+//           </>
+//         )}
+
+//         <Routes>
+//           {/* Trang đăng nhập */}
+//           <Route path="/login" element={<Login loginHandler={loginHandler} />} />
+
+//           {/* Trang đăng ký */}
+//           <Route path="/register" element={<Register />} />
+
+//           {/* Trang Đơn tiếp nhận */}
+//           <Route
+//             path="/reception-form"
+//             element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách tiếp nhận */}
+//           <Route
+//             path="/reception-list"
+//             element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách bệnh nhân */}
+//           <Route
+//             path="/patient-list"
+//             element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng mặc định */}
+//           <Route
+//             path="/"
+//             element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng sai đường dẫn */}
+//           <Route path="*" element={<Navigate to="/" />} />
+//         </Routes>
+//       </div>
+//     </Router>
+//   );
+// };
+
+// export default App;
+
+// import React, { useState } from "react";
+// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// import Login from "./components/Login"; // Component đăng nhập
+// import Register from "./components/Register"; // Component đăng ký
+// import ReceptionForm from "./components/ReceptionManage/ReceptionForm"; // Component Đơn tiếp nhận
+// import ReceptionList from "./components/ReceptionManage/ReceptionList"; // Component Danh sách tiếp nhận
+// import PatientList from "./components/ReceptionManage/PatientList"; // Component Danh sách bệnh nhân
+// import Navbar from "./components/ReceptionManage/Navbar"; // Navbar
+// import Header from "../src/components/Header/Header"; // Header
+// import ChangePassword from "../src/components/Header/ChangePassword"; // Component Đổi mật khẩu
+// import AccountSetting from "../src/components/Header/AccountSetting"; // Component Cài đặt tài khoản
+
+// const App = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
+
+//   // Hàm xử lý đăng nhập
+//   const loginHandler = () => setIsAuthenticated(true);
+
+//   // Hàm xử lý đăng xuất
+//   const logoutHandler = () => setIsAuthenticated(false);
+
+//   return (
+//     <Router>
+//       <div>
+//         {/* Hiển thị Header và Navbar khi đăng nhập thành công */}
+//         {isAuthenticated && (
+//           <>
+//             <Header logoutHandler={logoutHandler} /> {/* Header luôn hiển thị trên Navbar */}
+//             <Navbar /> {/* Navbar luôn nằm dưới Header */}
+//           </>
+//         )}
+
+//         <Routes>
+//           {/* Trang đăng nhập */}
+//           <Route path="/login" element={<Login loginHandler={loginHandler} />} />
+
+//           {/* Trang đăng ký */}
+//           <Route path="/register" element={<Register />} />
+
+//           {/* Trang Đơn tiếp nhận */}
+//           <Route
+//             path="/reception-form"
+//             element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách tiếp nhận */}
+//           <Route
+//             path="/reception-list"
+//             element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách bệnh nhân */}
+//           <Route
+//             path="/patient-list"
+//             element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Đổi mật khẩu */}
+//           <Route
+//             path="/change-password"
+//             element={isAuthenticated ? <ChangePassword /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Cài đặt tài khoản */}
+//           <Route
+//             path="/account-settings"
+//             element={isAuthenticated ? <AccountSetting /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng mặc định */}
+//           <Route
+//             path="/"
+//             element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng sai đường dẫn */}
+//           <Route path="*" element={<Navigate to="/" />} />
+//         </Routes>
+//       </div>
+//     </Router>
+//   );
+// };
+
+// export default App;
+
+// import React, { useState } from "react";
+// import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+// import Login from "./components/Login"; // Component đăng nhập
+// import Register from "./components/Register"; // Component đăng ký
+// import ReceptionForm from "./components/ReceptionManage/ReceptionForm"; // Component Đơn tiếp nhận
+// import ReceptionList from "./components/ReceptionManage/ReceptionList"; // Component Danh sách tiếp nhận
+// import PatientList from "./components/ReceptionManage/PatientList"; // Component Danh sách bệnh nhân
+// import Navbar from "./components/ReceptionManage/Navbar"; // Navbar
+// import Header from "../src/components/Header/Header"; // Header
+// import ChangePassword from "../src/components/Header/ChangePassword"; // Component Đổi mật khẩu
+// import AccountSetting from "../src/components/Header/AccountSetting"; // Component Cài đặt tài khoản
+
+// const App = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
+//   const location = useLocation(); // Lấy thông tin về đường dẫn hiện tại
+
+//   // Hàm xử lý đăng nhập
+//   const loginHandler = () => setIsAuthenticated(true);
+
+//   // Hàm xử lý đăng xuất
+//   const logoutHandler = () => setIsAuthenticated(false);
+
+//   // Kiểm tra xem người dùng có ở trang Đổi mật khẩu hoặc Cài đặt tài khoản không
+//   const hideNavbar = location.pathname === "/change-password" || location.pathname === "/account-settings";
+
+//   return (
+//     <Router>
+//       <div>
+//         {/* Hiển thị Header khi đăng nhập thành công */}
+//         {isAuthenticated && <Header logoutHandler={logoutHandler} />}
+
+//         {/* Ẩn Navbar khi ở trang Đổi mật khẩu hoặc Cài đặt tài khoản */}
+//         {!hideNavbar && isAuthenticated && <Navbar />}
+
+//         <Routes>
+//           {/* Trang đăng nhập */}
+//           <Route path="/login" element={<Login loginHandler={loginHandler} />} />
+
+//           {/* Trang đăng ký */}
+//           <Route path="/register" element={<Register />} />
+
+//           {/* Trang Đơn tiếp nhận */}
+//           <Route
+//             path="/reception-form"
+//             element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách tiếp nhận */}
+//           <Route
+//             path="/reception-list"
+//             element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Danh sách bệnh nhân */}
+//           <Route
+//             path="/patient-list"
+//             element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Đổi mật khẩu */}
+//           <Route
+//             path="/change-password"
+//             element={isAuthenticated ? <ChangePassword /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Trang Cài đặt tài khoản */}
+//           <Route
+//             path="/account-settings"
+//             element={isAuthenticated ? <AccountSetting /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng mặc định */}
+//           <Route
+//             path="/"
+//             element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+//           />
+
+//           {/* Điều hướng sai đường dẫn */}
+//           <Route path="*" element={<Navigate to="/" />} />
+//         </Routes>
+//       </div>
+//     </Router>
+//   );
+// };
+
+// export default App;
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Login from "./components/Login"; // Component đăng nhập
+import Register from "./components/Register"; // Component đăng ký
+import ReceptionForm from "./components/ReceptionManage/ReceptionForm"; // Component Đơn tiếp nhận
+import ReceptionList from "./components/ReceptionManage/ReceptionList"; // Component Danh sách tiếp nhận
+import PatientList from "./components/ReceptionManage/PatientList"; // Component Danh sách bệnh nhân
+import Navbar from "./components/ReceptionManage/Navbar"; // Navbar
+import Header from "../src/components/Header/Header"; // Header
+import ChangePassword from "../src/components/Header/ChangePassword"; // Component Đổi mật khẩu
+import AccountSetting from "../src/components/Header/AccountSetting"; // Component Cài đặt tài khoản
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
+  const location = useLocation(); // Lấy thông tin về đường dẫn hiện tại
 
-  // Hàm đăng nhập
+  // Hàm xử lý đăng nhập
   const loginHandler = () => setIsAuthenticated(true);
-  // Hàm đăng xuất
+
+  // Hàm xử lý đăng xuất
   const logoutHandler = () => setIsAuthenticated(false);
 
-  return (
-    <Router>
-      <Routes>
-        {/* Route cho trang chủ mặc định, chuyển đến Login nếu chưa đăng nhập */}
-        <Route path="/reception-form" element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" />} />
+  // Kiểm tra xem người dùng có ở trang Đổi mật khẩu hoặc Cài đặt tài khoản không
+  const hideNavbar = location.pathname === "/change-password" || location.pathname === "/account-settings";
 
-        {/* Route cho các trang yêu cầu phải đăng nhập
-        <Route path="/reception-list" element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" />} />
-        <Route path="/patient-list" element={isAuthenticated ? <PatientList /> : <Navigate to="/login" />} /> */}
-        
+  return (
+    <div>
+      {/* Hiển thị Header khi đăng nhập thành công */}
+      {isAuthenticated && <Header logoutHandler={logoutHandler} />}
+
+      {/* Ẩn Navbar khi ở trang Đổi mật khẩu hoặc Cài đặt tài khoản */}
+      {!hideNavbar && isAuthenticated && <Navbar />}
+
+      <Routes>
         {/* Trang đăng nhập */}
         <Route path="/login" element={<Login loginHandler={loginHandler} />} />
 
         {/* Trang đăng ký */}
         <Route path="/register" element={<Register />} />
+
+        {/* Trang Đơn tiếp nhận */}
+        <Route
+          path="/reception-form"
+          element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Trang Danh sách tiếp nhận */}
+        <Route
+          path="/reception-list"
+          element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Trang Danh sách bệnh nhân */}
+        <Route
+          path="/patient-list"
+          element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Trang Đổi mật khẩu */}
+        <Route
+          path="/change-password"
+          element={isAuthenticated ? <ChangePassword /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Trang Cài đặt tài khoản */}
+        <Route
+          path="/account-settings"
+          element={isAuthenticated ? <AccountSetting /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Điều hướng mặc định */}
+        <Route
+          path="/"
+          element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Điều hướng sai đường dẫn */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Router>
+    </div>
   );
 };
 
-export default App;
+// Bao bọc ứng dụng trong Router để useLocation hoạt động
+const AppWithRouter = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWithRouter;

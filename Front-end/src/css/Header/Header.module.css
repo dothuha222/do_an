@@ -1,0 +1,126 @@
+/* Header tổng thể */
+.headerBody {
+  display: block !important;
+  margin: 0 !important;
+}
+
+
+.mt4.container {
+  margin-top: 0px !important;
+  padding: 0;
+  max-width: 100%;
+}
+
+:global(.mt-4.container) {
+  max-width: 100% !important;
+  margin-top: 0 !important;
+  padding: 0 !important;
+}
+
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 56px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #588AD7;
+  color: #fff;
+  margin-top: 0px !important;
+}
+
+/* Vị trí bên trái */
+.headerTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Vị trí bên phải */
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.userInfo {
+  margin-right: 20px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userInfo strong {
+  display: block;
+  font-size: 14px;
+}
+
+.userInfo small {
+  font-size: 12px;
+  color: #fff;
+}
+
+/* Avatar */
+.headerAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.headerAvatar img {
+  width: 100%;
+  border-radius: inherit;
+}
+
+/* Dropdown button */
+.dropdownToggleBtn {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Dropdown menu */
+.dropdownMenu {
+  position: absolute;
+  right: 21px;
+  top: 49px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  min-width: 183px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownItem {
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  background-color: #fff;
+  border: none;
+}
+
+.dropdownItem:hover {
+  background-color: #f1f1f1;
+  color: #007bff;
+}
+
+/* Dropdown backdrop để phát hiện click ra ngoài */
+.dropdownBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 999;
+}

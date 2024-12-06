@@ -1,0 +1,56 @@
+/* Cấu trúc Navbar */
+.navbar {
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+/* Cấu trúc các tab */
+.tabs {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 80px;
+  padding: 0;
+}
+
+.tab-item {
+  cursor: pointer;
+  padding: 10px 4px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  text-decoration: none;
+  position: relative; /* Để sử dụng pseudo-element */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển đổi màu */
+  margin-right: 50px;
+}
+
+.tab-item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tab-item:hover {
+  color: #007bff; /* Chỉ thay đổi màu khi hover */
+}
+
+/* Pseudo-element cho đường viền dưới */
+.tab-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0; /* Đường viền mặc định ẩn */
+  height: 3px;
+  background-color: #007bff;
+  transition: width 0.3s ease; /* Hiệu ứng khi click */
+  transform: translateX(-50%);
+}
+
+.tab-item.active {
+  color: #007bff; /* Màu chữ khi active */
+}
+
+.tab-item.active::after {
+  width: 100%; /* Đường viền chỉ hiển thị khi active */
+}

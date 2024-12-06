@@ -1,0 +1,129 @@
+
+
+.patientList {
+  padding: 16px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.filterSection {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: end;
+  padding: 0px 58px;
+}
+
+.filterSection div label {
+  font-size: 15px;
+  margin-bottom: 7px;
+}
+
+.filterSection .filterInput{
+  color: #2a2a2a;
+  border: 1px solid #b4b4b4;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+.filterSection .filterName{
+  width: 27%;
+}
+
+.filterSection .filterName input{
+  width: 100%;
+}
+.listTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.listTable thead{
+  background-color: #dcebfc;
+  text-align: center;
+}
+
+.listTable tr{
+  text-align: center;
+}
+.listTable th,
+.listTable td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.searchButton,
+.detailButton,
+.editButton,
+.deleteButton {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.searchButton {
+  background-color: #007bff;
+  color: white;
+  padding: 7px 14px;
+    background-color: #588ad7;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.detailButton {
+  background-color: transparent;
+  color: #588ad7;
+  text-decoration: underline;
+  font-size: 15px;
+}
+
+.editButton {
+  background-color: transparent;
+  color: #645d5d;
+  margin-right: 4px;
+}
+
+.deleteButton {
+  background-color: transparent;
+  color: red;
+}
+
+.searchButton:hover{
+  opacity: 0.8;
+}
+
+.detailButton:hover,
+.editButton:hover,
+.deleteButton:hover {
+  opacity: 0.6;
+}
+
+.pagination{
+  margin-top: 47px;
+  margin-right: 160px;
+  text-align: end;
+  position: fixed;
+  top: 530px;
+  right: 0;
+}
+
+.pagination span{
+  margin: 0 8px;
+}
+
+.pagination button{
+  color: #588ad7;
+  background-color: transparent;
+  padding: 0px 6px;
+  border: 1px solid;
+  border-radius: 2px;order: none;
+  transition: 0.1s;
+} 
+
+.pagination button:hover{
+  background-color: #c3d8fdc7;
+}
+

@@ -1,0 +1,126 @@
+/* Toàn bộ container */
+.loginContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #2d58a1, #6fa4f3); /* Gradient nền */
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: absolute;
+  left: 104px;
+}
+.title {
+  padding: 0;
+  margin: 0;
+}
+
+.title h2 {
+  color: #fff;
+  margin: 0;
+  font-weight: normal;
+  position: relative;
+  top: -250px;
+}
+
+.logo {
+  position: absolute;
+}
+
+.loginBox {
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  position: absolute;
+  right: 216px;
+}
+
+.loginBox h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.formGroup {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 10px 7px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.formGroup input:focus {
+  border: 1px solid #0052cc;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 18px;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.rememberMe input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.btnLogin {
+  width: 100%;
+  background: #0052cc;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btnLogin:hover {
+  background: #003c99;
+}
+
+.registerLink {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.registerLink a {
+  color: #ff9900;
+  text-decoration: none;
+}
+
+.registerLink a:hover {
+  text-decoration: underline;
+}

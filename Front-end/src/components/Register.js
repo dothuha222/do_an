@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; 
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "../css/Register.css"; 
+import "react-datepicker/dist/react-datepicker.module.css";
+import styles from '../css/Register.module.css'; // Import CSS Module
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,13 +25,12 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-box">
+    <div className={styles.registerContainer}>
+      <div className={styles.registerBox}>
         <h2>Đăng ký</h2>
         <form onSubmit={handleSubmit}>
           {/* Họ tên */}
-          <div className="form-group">
-            <i className="icon fa fa-user"></i>
+          <div className={styles.formGroup}>
             <input
               type="text"
               name="fullName"
@@ -44,19 +42,18 @@ const Register = () => {
           </div>
 
           {/* Ngày tháng năm sinh */}
-          <div className="form-group">
-            <i className="icon fa fa-calendar"></i>
+          <div className={styles.formGroup}>
             <DatePicker
               selected={formData.birthdate ? new Date(formData.birthdate) : null}
               onChange={(date) => setFormData({ ...formData, birthdate: date })}
               dateFormat="dd/MM/yyyy" 
               placeholderText="Ngày sinh"
+              className={styles.datePickerWrapper}
             />
           </div>
 
           {/* Số điện thoại */}
-          <div className="form-group">
-            <i className="icon fa fa-phone"></i>
+          <div className={styles.formGroup}>
             <input
               type="tel"
               name="phone"
@@ -68,8 +65,7 @@ const Register = () => {
           </div>
 
           {/* Username */}
-          <div className="form-group">
-            <i className="icon fa fa-user-circle"></i>
+          <div className={styles.formGroup}>
             <input
               type="text"
               name="username"
@@ -81,8 +77,7 @@ const Register = () => {
           </div>
 
           {/* Mật khẩu */}
-          <div className="form-group">
-            <i className="icon fa fa-lock"></i>
+          <div className={styles.formGroup}>
             <input
               type="password"
               name="password"
@@ -94,8 +89,7 @@ const Register = () => {
           </div>
 
           {/* Nhập lại mật khẩu */}
-          <div className="form-group">
-            <i className="icon fa fa-lock"></i>
+          <div className={styles.formGroup}>
             <input
               type="password"
               name="rePassword"
@@ -107,13 +101,13 @@ const Register = () => {
           </div>
 
           {/* Nút Đăng ký */}
-          <button type="submit" className="btn-register">
+          <button type="submit" className={styles.btnRegister}>
             Đăng ký
           </button>
         </form>
 
         {/* Liên kết đăng nhập */}
-        <p className="login-link">
+        <p className={styles.loginLink}>
           Bạn đã có tài khoản? <Link to="/">Đăng nhập ngay!</Link>
         </p>
       </div>
@@ -122,4 +116,3 @@ const Register = () => {
 };
 
 export default Register;
-

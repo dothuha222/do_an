@@ -1,0 +1,126 @@
+/* Nền tổng thể */
+.accountSettingBody {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #d8d8d8 !important; /* Nền xám nhạt */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Đảm bảo form nằm giữa màn hình */
+  }
+  
+  /* Khung container chính */
+  .accountSettingContainer {
+    width: 900px; /* Độ rộng khung form */
+    background-color: #ffffffa6; /* Nền trắng */
+    padding: 16px 30px; /* Khoảng cách nội dung */
+    border-radius: 8px; /* Bo góc form */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng mềm */
+  }
+  
+  /* Tiêu đề khung */
+  .accountSettingContainer h3 {
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: bold;
+    text-align: justify;
+    color: #0247b1;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: absolute;
+    left: 104px;
+    top: 66px;
+  }
+  
+  /* Nút quay lại */
+  .header button {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+  }
+  
+  .header button:hover {
+    text-decoration: none;
+    color: #0247B1;
+  }
+  
+  /* Form và các nhóm input */
+  .accountForm h3 {
+    color: #000;
+  }
+  
+  .accountForm .formGroup {
+    margin-bottom: 20px;
+  }
+  
+  .accountForm label {
+    display: block;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .accountForm input[type="text"],
+  .accountForm input[type="file"],
+  .reactDatepickerWrapper input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+  
+  .accountForm input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+  }
+  
+  /* Avatar preview */
+  .avatarPreview {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .avatarPreview img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+  }
+  
+  .customButton {
+    margin-right: 40px !important;
+    padding: 5px 26px !important;
+  }
+  
+  .customSaveButton {
+    background-color: #0247b1 !important;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .customSaveButton:hover {
+    background-color: #066deae7 !important;
+    border-color: #ccc !important;
+  }
+  
+  /* .custom-cancel-button { } */
+  
