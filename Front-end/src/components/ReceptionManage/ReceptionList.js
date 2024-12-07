@@ -325,3 +325,320 @@ const ReceptionList = () => {
 };
 
 export default ReceptionList;
+
+
+// import React, { useState, useEffect } from 'react';
+// import styles from '../../css/ReceptionManage/ReceptionList.module.css';
+// import Table from 'react-bootstrap/Table';
+// import Button from 'react-bootstrap/Button';
+// import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+// import Modal from 'react-bootstrap/Modal';
+// import ReceptionForm from './ReceptionForm';
+
+// const ReceptionList = () => {
+//   const [receptions, setReceptions] = useState([]);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [selectedReception, setSelectedReception] = useState(null);
+//   const [showModal, setShowModal] = useState(false);
+//   const [mode, setMode] = useState('add'); // Modes: 'add', 'edit', 'view'
+
+//   useEffect(() => {
+//     // Giả lập dữ liệu tiếp nhận
+//     const dummyData = [
+//       { id: 1, patientId: 'P001', fullName: 'Nguyễn Văn A', receptionCode: 'R001', receptionTime: '06/12/2024', reason: 'Khám tổng quát', room: '101A' },
+//       { id: 2, patientId: 'P002', fullName: 'Trần Thị B', receptionCode: 'R002', receptionTime: '06/12/2024', reason: 'Khám nội tiết', room: '102B' },
+//       { id: 3, patientId: 'P003', fullName: 'Lê Văn C', receptionCode: 'R003', receptionTime: '06/12/2024', reason: 'Khám tai mũi họng', room: '103C' },
+//     ];
+//     setReceptions(dummyData);
+//   }, []);
+
+//   const handleSearch = (e) => {
+//     setSearchTerm(e.target.value);
+//   };
+
+//   const filteredReceptions = receptions.filter((reception) =>
+//     reception.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+//   const handleAddReception = () => {
+//     setSelectedReception(null);
+//     setMode('add');
+//     setShowModal(true);
+//   };
+
+//   const handleEditReception = (reception) => {
+//     setSelectedReception(reception);
+//     setMode('edit');
+//     setShowModal(true);
+//   };
+
+//   const handleViewReception = (reception) => {
+//     setSelectedReception(reception);
+//     setMode('view');
+//     setShowModal(true);
+//   };
+
+//   const handleDeleteReception = (id) => {
+//     const confirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+//     if (confirmed) {
+//       setReceptions(receptions.filter((reception) => reception.id !== id));
+//     }
+//   };
+
+//   const handleModalClose = () => {
+//     setShowModal(false);
+//   };
+
+//   return (
+//     <div className={styles.receptionListContainer}>
+//       <h2 className={styles.header}>Danh sách tiếp nhận</h2>
+//       <div className={styles.actionContainer}>
+//         <input
+//           type="text"
+//           placeholder="Tìm kiếm theo tên bệnh nhân..."
+//           value={searchTerm}
+//           onChange={handleSearch}
+//           className={styles.searchInput}
+//         />
+//         <Button onClick={handleAddReception} className={styles.addButton}>
+//           <FaPlus /> Thêm mới
+//         </Button>
+//       </div>
+//       <Table striped bordered hover className={styles.receptionTable}>
+//         <thead>
+//           <tr>
+//             <th>#</th>
+//             <th>Mã bệnh nhân</th>
+//             <th>Họ và tên</th>
+//             <th>Mã phiếu</th>
+//             <th>Ngày tiếp nhận</th>
+//             <th>Lý do khám</th>
+//             <th>Phòng khám</th>
+//             <th>Hành động</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {filteredReceptions.length > 0 ? (
+//             filteredReceptions.map((reception, index) => (
+//               <tr key={reception.id}>
+//                 <td>{index + 1}</td>
+//                 <td>{reception.patientId}</td>
+//                 <td>{reception.fullName}</td>
+//                 <td>{reception.receptionCode}</td>
+//                 <td>{reception.receptionTime}</td>
+//                 <td>{reception.reason}</td>
+//                 <td>{reception.room}</td>
+//                 <td>
+//                   <Button
+//                     variant="primary"
+//                     size="sm"
+//                     onClick={() => handleViewReception(reception)}
+//                     className={styles.viewButton}
+//                   >
+//                     <FaSearch /> Xem
+//                   </Button>
+//                   <Button
+//                     variant="warning"
+//                     size="sm"
+//                     onClick={() => handleEditReception(reception)}
+//                     className={styles.editButton}
+//                   >
+//                     <FaEdit /> Sửa
+//                   </Button>
+//                   <Button
+//                     variant="danger"
+//                     size="sm"
+//                     onClick={() => handleDeleteReception(reception.id)}
+//                     className={styles.deleteButton}
+//                   >
+//                     <FaTrash /> Xóa
+//                   </Button>
+//                 </td>
+//               </tr>
+//             ))
+//           ) : (
+//             <tr>
+//               <td colSpan="8" className={styles.noData}>
+//                 Không tìm thấy dữ liệu phù hợp
+//               </td>
+//             </tr>
+//           )}
+//         </tbody>
+//       </Table>
+
+//       {/* Modal for Add/Edit/View */}
+//       <Modal show={showModal} onHide={handleModalClose} size="lg">
+//         <Modal.Header closeButton>
+//           <Modal.Title>
+//             {mode === 'add' && 'Thêm mới tiếp nhận'}
+//             {mode === 'edit' && 'Chỉnh sửa tiếp nhận'}
+//             {mode === 'view' && 'Xem chi tiết tiếp nhận'}
+//           </Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           <ReceptionForm mode={mode} receptionData={selectedReception} onClose={handleModalClose} />
+//         </Modal.Body>
+//       </Modal>
+//     </div>
+//   );
+// };
+
+// export default ReceptionList;
+
+// import React, { useState, useEffect } from 'react';
+// import styles from '../../css/ReceptionManage/ReceptionList.module.css';
+// import Table from 'react-bootstrap/Table';
+// import Button from 'react-bootstrap/Button';
+// import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+// import Modal from 'react-bootstrap/Modal';
+// import ReceptionForm from './ReceptionForm';
+
+// const ReceptionList = () => {
+//   const [receptions, setReceptions] = useState([]);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [selectedReception, setSelectedReception] = useState(null);
+//   const [showModal, setShowModal] = useState(false);
+//   const [mode, setMode] = useState('add'); // Modes: 'add', 'edit', 'view'
+
+//   useEffect(() => {
+//     // Giả lập dữ liệu tiếp nhận
+//     const dummyData = [
+//       { id: 1, patientId: 'P001', fullName: 'Nguyễn Văn A', receptionCode: 'R001', receptionTime: '06/12/2024', reason: 'Khám tổng quát', room: '101A' },
+//       { id: 2, patientId: 'P002', fullName: 'Trần Thị B', receptionCode: 'R002', receptionTime: '06/12/2024', reason: 'Khám nội tiết', room: '102B' },
+//       { id: 3, patientId: 'P003', fullName: 'Lê Văn C', receptionCode: 'R003', receptionTime: '06/12/2024', reason: 'Khám tai mũi họng', room: '103C' },
+//     ];
+//     setReceptions(dummyData);
+//   }, []);
+
+//   const handleSearch = (e) => {
+//     setSearchTerm(e.target.value);
+//   };
+
+//   const filteredReceptions = receptions.filter((reception) =>
+//     reception.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+//   const handleAddReception = () => {
+//     setSelectedReception(null);
+//     setMode('add');
+//     setShowModal(true);
+//   };
+
+//   const handleEditReception = (reception) => {
+//     setSelectedReception(reception);
+//     setMode('edit');
+//     setShowModal(true);
+//   };
+
+//   const handleViewReception = (reception) => {
+//     setSelectedReception(reception);
+//     setMode('view');
+//     setShowModal(true);
+//   };
+
+//   const handleDeleteReception = (id) => {
+//     const confirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+//     if (confirmed) {
+//       setReceptions(receptions.filter((reception) => reception.id !== id));
+//     }
+//   };
+
+//   const handleModalClose = () => {
+//     setShowModal(false);
+//   };
+
+//   return (
+//     <div className={styles.receptionListContainer}>
+//       <h2 className={styles.header}>Danh sách tiếp nhận</h2>
+//       <div className={styles.actionContainer}>
+//         <input
+//           type="text"
+//           placeholder="Tìm kiếm theo tên bệnh nhân..."
+//           value={searchTerm}
+//           onChange={handleSearch}
+//           className={styles.searchInput}
+//         />
+//         <Button onClick={handleAddReception} className={styles.addButton}>
+//           <FaPlus /> Thêm mới
+//         </Button>
+//       </div>
+//       <Table striped bordered hover className={styles.receptionTable}>
+//         <thead>
+//           <tr>
+//             <th>#</th>
+//             <th>Mã bệnh nhân</th>
+//             <th>Họ và tên</th>
+//             <th>Mã phiếu</th>
+//             <th>Ngày tiếp nhận</th>
+//             <th>Lý do khám</th>
+//             <th>Phòng khám</th>
+//             <th>Hành động</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {filteredReceptions.length > 0 ? (
+//             filteredReceptions.map((reception, index) => (
+//               <tr key={reception.id}>
+//                 <td>{index + 1}</td>
+//                 <td>{reception.patientId}</td>
+//                 <td>{reception.fullName}</td>
+//                 <td>{reception.receptionCode}</td>
+//                 <td>{reception.receptionTime}</td>
+//                 <td>{reception.reason}</td>
+//                 <td>{reception.room}</td>
+//                 <td>
+//                   <Button
+//                     variant="primary"
+//                     size="sm"
+//                     onClick={() => handleViewReception(reception)}
+//                     className={styles.viewButton}
+//                   >
+//                     <FaSearch /> Xem
+//                   </Button>
+//                   <Button
+//                     variant="warning"
+//                     size="sm"
+//                     onClick={() => handleEditReception(reception)}
+//                     className={styles.editButton}
+//                   >
+//                     <FaEdit /> Sửa
+//                   </Button>
+//                   <Button
+//                     variant="danger"
+//                     size="sm"
+//                     onClick={() => handleDeleteReception(reception.id)}
+//                     className={styles.deleteButton}
+//                   >
+//                     <FaTrash /> Xóa
+//                   </Button>
+//                 </td>
+//               </tr>
+//             ))
+//           ) : (
+//             <tr>
+//               <td colSpan="8" className={styles.noData}>
+//                 Không tìm thấy dữ liệu phù hợp
+//               </td>
+//             </tr>
+//           )}
+//         </tbody>
+//       </Table>
+
+//       {/* Modal for Add/Edit/View */}
+//       <Modal show={showModal} onHide={handleModalClose} size="lg">
+//         <Modal.Header closeButton>
+//           <Modal.Title>
+//             {mode === 'add' && 'Thêm mới tiếp nhận'}
+//             {mode === 'edit' && 'Chỉnh sửa tiếp nhận'}
+//             {mode === 'view' && 'Xem chi tiết tiếp nhận'}
+//           </Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           <ReceptionForm mode={mode} receptionData={selectedReception} onClose={handleModalClose} />
+//         </Modal.Body>
+//       </Modal>
+//     </div>
+//   );
+// };
+
+// export default ReceptionList;

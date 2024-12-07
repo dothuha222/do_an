@@ -318,6 +318,7 @@ import Navbar from "./components/ReceptionManage/Navbar"; // Navbar
 import Header from "../src/components/Header/Header"; // Header
 import ChangePassword from "../src/components/Header/ChangePassword"; // Component Đổi mật khẩu
 import AccountSetting from "../src/components/Header/AccountSetting"; // Component Cài đặt tài khoản
+import HealthForm from "../src/components/HealthManagement/HealthForm"; // Component Đơn khám sức khỏe
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
@@ -375,6 +376,12 @@ const App = () => {
         <Route
           path="/account-settings"
           element={isAuthenticated ? <AccountSetting /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Trang Cài đặt tài khoản */}
+        <Route
+          path="/health-form"
+          element={isAuthenticated ? <HealthForm /> : <Navigate to="/login" replace />}
         />
 
         {/* Điều hướng mặc định */}

@@ -30,6 +30,12 @@ const Navbar = () => {
         >
           <Link to="/patient-list">Danh sách bệnh nhân</Link>
         </li>
+        <li
+          className={`tab-item ${activeTab === 'healthForm' ? 'active' : ''}`}
+          onClick={() => handleTabClick('healthForm')}
+        >
+          <Link to="/health-form">Đơn khám bệnh</Link>
+        </li>
       </ul>
     </div>
   );
