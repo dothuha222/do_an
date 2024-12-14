@@ -17,43 +17,31 @@ const HealthHistory = () => {
     // Dữ liệu giả lập như ban đầu
     {
       id: 1,
-      receptionCode: 'RN001',
-      appointTime: '14-12-2024',
-      room: '--',
-      status: 'Chờ xác nhận',
+      healthCode: 'RN001',
+      ngayKham: '14-12-2024',
+      doctor: 'Nguyễn Văn A',
     },
     {
         id: 2,
-        receptionCode: 'RN002',
-        appointTime: '14-12-2024',
-        room: '101A',
-        status: 'Đã xác nhận',
+        healthCode: 'RN002',
+        ngayKham: '14-12-2024',
+        doctor: 'Nguyễn Văn A',
     },
     {
         id: 3,
-        receptionCode: 'RN003',
-        appointTime: '14-12-2024',
-        room: '--',
-        status: 'Từ chối',
+        healthCode: 'RN003',
+        ngayKham: '14-12-2024',
+        doctor: 'Nguyễn Văn B',
     },
     {
         id: 4,
-        receptionCode: 'RN004',
-        appointTime: '14-12-2024',
-        room: '101A',
-        status: 'Đã xác nhận',
+        healthCode: 'RN004',
+        ngayKham: '14-12-2024',
+        doctor: 'Nguyễn Văn B',
     },
     // Thêm dữ liệu khác...
   ]);
 
-  // Đổi định dạng ngày tháng thành dd/MM/yyyy
-//   const formatDate = (date) => {
-//     if (!date) return '';
-//     const day = String(date.getDate()).padStart(2, '0');
-//     const month = String(date.getMonth() + 1).padStart(2, '0');
-//     const year = date.getFullYear();
-//     return `${day}/${month}/${year}`;
-//   };
 
   const handleFilterChange = (field, value) => {
     setFilters({ ...filters, [field]: value });
@@ -133,12 +121,11 @@ const HealthHistory = () => {
         <thead>
           <tr>
             <th>STT</th>
-            <th>Mã đơn tiếp nhận</th>
-            <th>Ngày hẹn khám</th>
-            <th>Phòng khám</th>
-            <th>Chi tiết</th>
-            <th>Hành động</th>
-            <th>Trạng thái</th>
+            <th>Mã bệnh án</th>
+            <th>Ngày khám bệnh</th>
+            <th>Bác sĩ khám</th>
+            <th>Chi tiết bệnh án</th>
+            <th>Đơn thuốc</th>
           </tr>
         </thead>
         <tbody>
@@ -152,9 +139,9 @@ const HealthHistory = () => {
                 }}
               >
                 <td>{indexOfFirstItem + index + 1}</td>
-                <td>{item.receptionCode}</td>
-                <td>{item.appointTime}</td>
-                <td>{item.room}</td>
+                <td>{item.healthCode}</td>
+                <td>{item.ngayKham}</td>
+                <td>{item.doctor}</td>
                 <td>
                   <button
                     className={styles.detailButton}
@@ -165,32 +152,11 @@ const HealthHistory = () => {
                 </td>
                 <td>
                   <button
-                    className={styles.editButton}
+                    className={styles.detailButton}
                     onClick={() => alert(`Sửa ${item.receptionCode}`)}
                   >
-                    <FaPencilAlt />
+                    Xem
                   </button>
-                  <button
-                    className={styles.deleteButton}
-                    onClick={() =>
-                      window.confirm('Bạn muốn xóa bản ghi này không?') &&
-                      alert(`Đã xóa ${item.receptionCode}`)
-                    }
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-                <td
-                  style={{
-                    color:
-                      item.status === 'Chờ xác nhận'
-                        ? 'blue'
-                        : item.status === 'Đã xác nhận'
-                        ? 'green'
-                        : 'red',
-                  }}
-                >
-                  {item.status}
                 </td>
               </tr>
             ))
