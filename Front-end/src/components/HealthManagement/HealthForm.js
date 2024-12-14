@@ -1,157 +1,4 @@
-// import React, { useState } from 'react';
-// import styles from '../../css/HealthManagement/HealthForm.module.css'; // Import CSS styles
 
-// const HealthForm = () => {
-//     const [formData, setFormData] = useState({
-//         weight: '',
-//         height: '',
-//         temperature: '',
-//         breathingRate: '',
-//         pulse: '',
-//         bloodPressure: '',
-//         reason: '',
-//         medicalHistory: '',
-//         preliminaryDiagnosis: '',
-//         generalExamination: '',
-//         specificExamination: '',
-//         service: '',
-//         summary: '',
-//     });
-
-//     const [errors, setErrors] = useState({});
-//     const [startTime] = useState(new Date());
-
-//     const patientData = [
-//         { id: 'BN001', name: 'Nguyễn Quỳnh Lan', dob: '02/09/1990', gender: 'Nữ' }
-//     ];
-
-//     const validateForm = () => {
-//         const newErrors = {};
-//         if (!formData.weight) newErrors.weight = 'Cân nặng là bắt buộc';
-//         if (!formData.height) newErrors.height = 'Chiều cao là bắt buộc';
-//         if (!formData.temperature) newErrors.temperature = 'Nhiệt độ là bắt buộc';
-//         if (!formData.breathingRate) newErrors.breathingRate = 'Nhịp thở là bắt buộc';
-//         if (!formData.pulse) newErrors.pulse = 'Mạch là bắt buộc';
-//         if (!formData.bloodPressure) newErrors.bloodPressure = 'Huyết áp là bắt buộc';
-//         return newErrors;
-//     };
-
-//     const handleInputChange = (e) => {
-//         const { name, value } = e.target;
-//         setFormData({ ...formData, [name]: value });
-//     };
-
-//     const handleSaveAndPrint = () => {
-//         const newErrors = validateForm();
-//         if (Object.keys(newErrors).length > 0) {
-//             setErrors(newErrors);
-//         } else {
-//             const endTime = new Date();
-//             // Show modal for confirmation
-//             if (window.confirm("Xác nhận lưu và in phiếu?")) {
-//                 alert(`Lưu thành công!\nThời gian bắt đầu: ${startTime}\nThời gian kết thúc: ${endTime}`);
-//             }
-//         }
-//     };
-
-//     const handleCancel = () => {
-//         if (window.confirm("Xác nhận hủy đơn khám bệnh?")) {
-//             setFormData({
-//                 weight: '',
-//                 height: '',
-//                 temperature: '',
-//                 breathingRate: '',
-//                 pulse: '',
-//                 bloodPressure: '',
-//                 reason: '',
-//                 medicalHistory: '',
-//                 preliminaryDiagnosis: '',
-//                 generalExamination: '',
-//                 specificExamination: '',
-//                 service: '',
-//                 summary: '',
-//             });
-//         }
-//     };
-
-//     return (
-//         <div className={styles.receptionForm}>
-//             <div className={styles.formSection}>
-//                 <h3 className={styles.formSectionTitle}>Thông tin bệnh nhân</h3>
-//                 <div className={styles.formGroup}>
-//                     <label>Mã BN</label>
-//                     <input type="text" value={patientData[0].id} readOnly />
-//                 </div>
-//                 <div className={styles.formGroup}>
-//                     <label>Họ và tên</label>
-//                     <input type="text" value={patientData[0].name} readOnly />
-//                 </div>
-//                 <div className={styles.formGroup}>
-//                     <label>Ngày sinh</label>
-//                     <input type="text" value={patientData[0].dob} readOnly />
-//                 </div>
-//                 <div className={styles.formGroup}>
-//                     <label>Giới tính</label>
-//                     <input type="text" value={patientData[0].gender} readOnly />
-//                 </div>
-//             </div>
-            
-//             <div className={styles.formFlex}>
-//                 <div>
-//                     <h3 className={styles.formSectionTitle}>Thông tin phòng khám</h3>
-//                     <p>Phòng khám: ABC</p>
-//                     <p>Bác sĩ thực hiện: Dr. XYZ</p>
-//                     <p>Thời gian bắt đầu: {startTime.toLocaleString()}</p>
-//                 </div>
-//                 <div className={styles.buttons}>
-//                     <button className={styles.savePrint} onClick={handleSaveAndPrint}>LƯU VÀ IN PHIẾU</button>
-//                     <button className={styles.cancel} onClick={handleCancel}>HỦY</button>
-//                 </div>
-//             </div>
-
-//             <div className={styles.formSection}>
-//                 <h3 className={styles.formSectionTitle}>Thông tin khám bệnh</h3>
-//                 <div>
-//                     <h4>Chỉ số khám bệnh</h4>
-//                     <div className={styles.formGroup}>
-//                         <label>Cân nặng (kg)</label>
-//                         <input
-//                             type="text"
-//                             placeholder="kg"
-//                             name="weight"
-//                             value={formData.weight}
-//                             onChange={handleInputChange}
-//                         />
-//                         {errors.weight && <span className={styles.error}>{errors.weight}</span>}
-//                     </div>
-//                     {/* Repeat for other inputs */}
-//                 </div>
-
-//                 <div className={styles.formFlex}>
-//                     <div className={styles.formFlex1}>
-//                         <label>Lý do khám bệnh</label>
-//                         <input
-//                             type="text"
-//                             name="reason"
-//                             disabled
-//                             value={formData.reason}
-//                         />
-//                     </div>
-//                     {/* Repeat for A2 */}
-//                 </div>
-
-//                 <h4>Tóm tắt kết quả khám bệnh</h4>
-//                 <textarea
-//                     name="summary"
-//                     value={formData.summary}
-//                     onChange={handleInputChange}
-//                 />
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default HealthForm;
 
 import React, { useState } from 'react';
 import styles from '../../css/HealthManagement/HealthForm.module.css'; // Import CSS styles
@@ -166,7 +13,7 @@ const HealthForm = () => {
         breathingRate: '',
         pulse: '',
         bloodPressure: '',
-        reason: '',
+        reason: 'Đau mỏi vai gáy',
         medicalHistory: '',
         preliminaryDiagnosis: '',
         generalExamination: '',
@@ -196,6 +43,15 @@ const HealthForm = () => {
         if (!formData.bloodPressure) newErrors.bloodPressure = 'Huyết áp là bắt buộc';
         return newErrors;
     };
+    const formatDate = (date) => {
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const yyyy = date.getFullYear();
+        const hh = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+    };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -211,7 +67,7 @@ const HealthForm = () => {
             setEndTime(end);
             // Show modal for confirmation
             if (window.confirm("Xác nhận lưu và in phiếu?")) {
-                alert(`Lưu thành công!\nThời gian bắt đầu:  ${startTime.toLocaleString()}\nThời gian kết thúc: ${end.toLocaleString()}`);
+                alert(`Lưu thành công!\nThời gian bắt đầu:  ${formatDate(startTime)}\nThời gian kết thúc: ${formatDate(end)}`);;
             }
         }
     };
@@ -271,8 +127,8 @@ const HealthForm = () => {
                         </div>
                         <div className={styles.formGroup} style={{ marginBottom: "8px", alignItems:"stretch" }}>
                             <label className={styles.formLabel}>Thời gian bắt đầu khám:</label>
-                            <p className={styles.formSectionP}> {startTime.toLocaleString()}</p>
-                            {endTime && <p>Thời gian kết thúc khám: {endTime.toLocaleString()}</p>}
+                            <p className={styles.formSectionP}> {formatDate(startTime)}</p>
+                            {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>}
                         </div>
                     </div>
                     <div className={styles.buttons}>
@@ -286,7 +142,7 @@ const HealthForm = () => {
                 </div>
             </div>
 
-            <div className={styles.formSection} style={{ marginTop: '0px', marginBottom: '0px'}}>
+            <div className={styles.formSection} style={{ marginTop: '0px', marginBottom: '20px'}}>
                 <h3 className={styles.formSectionTitle}>Thông tin khám bệnh</h3>
                 <div className={styles.formFlex}
                 >
@@ -374,6 +230,7 @@ const HealthForm = () => {
                                 name="reason"
                                 disabled
                                 value={formData.reason}
+                                style={{ backgroundColor:"#E3F5FF"}}
                             />
                         </div>
                         <div className={styles.formGroup}>

@@ -1,15 +1,16 @@
 
 
 import React, { useState, useEffect } from 'react';
-import styles from '../../css/ReceptionManage/ReceptionForm.module.css';
+import styles from '../../css/User/ScheduleForm.module.css';
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
 
-const ReceptionForm = ({ mode, receptionData, onClose }) => {
+const  ScheduleForm = ({ mode, receptionData, onClose }) => {
   const [formData, setFormData] = useState({
+    appointDay:'',
     patientId: '',
     fullName: '',
     birthDate: '',
@@ -44,12 +45,16 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
     });
   };
 
+  const handleAppointChange = (date) => {
+    setFormData({ ...formData, appointDay:date});
+  };
   const handleDateChange = (date) => {
     setFormData({ ...formData, birthDate: date });
   };
 
   const handleSaveAndPrint = () => {
     let validationErrors = {};
+    if (!formData.appointDay) validationErrors.appointDay = 'Ngày hẹn khám là bắt buộc';
     if (!formData.fullName) validationErrors.fullName = 'Họ và tên là bắt buộc';
     if (!formData.birthDate) validationErrors.birthDate = 'Ngày sinh là bắt buộc';
     if (!formData.cccd) validationErrors.cccd = 'CCCD là bắt buộc';
@@ -82,30 +87,22 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
 
   return (
     <div className={styles.receptionForm}>
-      {!isDisabled && (
-        <div className={styles.buttons}>
-          <button onClick={handleSaveAndPrint} className={`${styles.btn} ${styles.savePrint}`}>
-            <FaPrint style={{ marginRight: '8px' }} /> <span>LƯU VÀ IN PHIẾU</span>
-          </button>
-          <button onClick={handleCancel} className={`${styles.btn} ${styles.cancel}`}>
-            <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
-          </button>
-        </div>
-      )}
       <div className={styles.formSection}>
         <form>
-          <h3 className={styles.formSectionTitle}>Thông tin bệnh nhân</h3>
+            <h3 className={styles.formH}>ĐẶT LỊCH KHÁM BỆNH</h3>
           <div className={styles.formFlex}>
             <div className={styles.formFlex1}>
               <div className={styles.formGroup}>
-                <label>Mã bệnh nhân</label>
-                <input
-                  type="text"
-                  name="patientId"
-                  value={formData.patientId}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
+                <label>Ngày hẹn khám <span style={{ color: 'red' }}>*</span></label>
+                <DatePicker
+                    selected={formData.appointDay}
+                    onChange={handleAppointChange}
+                    dateFormat="dd/MM/yyyy"
+                    className={styles.datePicker}
+                    disabled={isDisabled}
+                    placeholderText="Chọn ngày hẹn khám"
                 />
+                {errors.appointDay && <span className={styles.error}>{errors.appointDay}</span>}
               </div>
               <div className={styles.formGroup}>
                 <label>Họ và tên <span style={{ color: 'red' }}>*</span></label>
@@ -117,6 +114,17 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                   disabled={isDisabled}
                 />
                 {errors.fullName && <span className={styles.error}>{errors.fullName}</span>}
+              </div>
+              <div className={styles.formGroup}>
+                <label>CCCD <span style={{ color: 'red' }}>*</span></label>
+                <input
+                  type="text"
+                  name="cccd"
+                  value={formData.cccd}
+                  onChange={handleInputChange}
+                  disabled={isDisabled}
+                />
+                {errors.cccd && <span className={styles.error}>{errors.cccd}</span>}
               </div>
               <div className={styles.formGroup}>
                 <label>Ngày sinh <span style={{ color: 'red' }}>*</span></label>
@@ -131,20 +139,6 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                 {errors.birthDate && <span className={styles.error}>{errors.birthDate}</span>}
               </div>
               <div className={styles.formGroup}>
-                <label>CCCD <span style={{ color: 'red' }}>*</span></label>
-                <input
-                  type="text"
-                  name="cccd"
-                  value={formData.cccd}
-                  onChange={handleInputChange}
-                  disabled={isDisabled}
-                />
-                {errors.cccd && <span className={styles.error}>{errors.cccd}</span>}
-              </div>
-            
-            </div>
-            <div className={styles.formFlex1}>
-            <div className={styles.formGroup}>
                 <label>Giới tính <span style={{ color: 'red' }}>*</span></label>
                 <select
                   name="gender"
@@ -157,7 +151,9 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                   <option value="Nữ">Nữ</option>
                 </select>
                 {errors.gender && <span className={styles.error}>{errors.gender}</span>}
-              </div>
+              </div>       
+            </div>
+            <div className={styles.formFlex1}>         
               <div className={styles.formGroup}>
                 <label>Địa chỉ <span style={{ color: 'red' }}>*</span></label>
                 <input
@@ -206,42 +202,6 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                 />
                 {errors.bhytCode && <span className={styles.error}>{errors.bhytCode}</span>}
               </div>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div className={styles.formSection}>
-        <form>
-          <h3 className={styles.formSectionTitle}>Thông tin phiếu</h3>
-          <div className={styles.formFlex}>
-            <div className={styles.formFlex1}>
-              <div className={styles.formGroup}>
-                <label>Mã đơn tiếp nhận</label>
-                <input
-                  type="text"
-                  name="receiptId"
-                  value={formData.receptionCode}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
-                />
-              </div>
-            </div>
-            <div className={styles.formFlex1}>
-              <div className={styles.formGroup}>
-                <label>Ngày khám</label>
-                <input
-                  type="text"
-                  name="visitDate"
-                  value={formData.receptionTime}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={styles.formFlex}>
-            <div className={styles.formFlex1}>
               <div className={styles.formGroup}>
                 <label>Lý do khám <span style={{ color: 'red' }}>*</span></label>
                 <input
@@ -254,24 +214,17 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                 {errors.reason && <span className={styles.error}>{errors.reason}</span>}
               </div>
             </div>
-            <div className={styles.formFlex1}>
-              <div className={styles.formGroup}>
-                <label>Phòng khám <span style={{ color: 'red' }}>*</span></label>
-                <select
-                  name="room"
-                  value={formData.room}
-                  onChange={handleInputChange}
-                  disabled={isDisabled}
-                >
-                  <option value="">Chọn phòng khám</option>
-                  <option value="101A">Phòng khám 101A</option>
-                  <option value="102B">Phòng khám 102B</option>
-                  <option value="103C">Phòng khám 103C</option>
-                </select>
-                {errors.room && <span className={styles.error}>{errors.room}</span>}
-              </div>
-            </div>
           </div>
+          {!isDisabled && (
+        <div className={styles.buttons}>
+          <button onClick={handleSaveAndPrint} className={`${styles.btn} ${styles.savePrint}`}>
+            <span>ĐẶT LỊCH HẸN</span>
+          </button>
+          <button onClick={handleCancel} className={`${styles.btn} ${styles.cancel}`}>
+            <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
+          </button>
+        </div>
+      )}
         </form>
       </div>
 
@@ -296,4 +249,4 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
   );
 };
 
-export default ReceptionForm;
+export default ScheduleForm;

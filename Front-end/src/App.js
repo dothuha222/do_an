@@ -319,6 +319,14 @@ import Header from "../src/components/Header/Header"; // Header
 import ChangePassword from "../src/components/Header/ChangePassword"; // Component Đổi mật khẩu
 import AccountSetting from "../src/components/Header/AccountSetting"; // Component Cài đặt tài khoản
 import HealthForm from "../src/components/HealthManagement/HealthForm"; // Component Đơn khám sức khỏe
+import PrescriptionForm from "../src/components/HealthManagement/PrescriptionForm"
+import InvoiceForm from "./components/ReceptionManage/InvoiceForm";
+import NavbarUser from "./components/User/NavbarUser";
+import Home from "./components/User/Home";
+import ScheduleForm from "./components/User/ScheduleForm";
+import ScheduleList from "./components/User/ScheduleList";
+import HealthHistory from "./components/User/HealthHistory";
+import InvoiceHistory from "./components/User/InvoiceHistory";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Trạng thái đăng nhập
@@ -339,7 +347,8 @@ const App = () => {
       {isAuthenticated && <Header logoutHandler={logoutHandler} />}
 
       {/* Ẩn Navbar khi ở trang Đổi mật khẩu hoặc Cài đặt tài khoản */}
-      {!hideNavbar && isAuthenticated && <Navbar />}
+      {/* {!hideNavbar && isAuthenticated && <Navbar />} */}
+      {!hideNavbar && isAuthenticated && <NavbarUser />}
 
       <Routes>
         {/* Trang đăng nhập */}
@@ -349,22 +358,42 @@ const App = () => {
         <Route path="/register" element={<Register />} />
 
         {/* Trang Đơn tiếp nhận */}
-        <Route
+        {/* <Route
           path="/reception-form"
           element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+        /> */}
+        <Route
+          path="/home"
+          element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
+        />
+         <Route
+          path="/schedule-form"
+          element={isAuthenticated ? <ScheduleForm /> : <Navigate to="/login" replace />}
+        />
+         <Route
+          path="/schedule-list"
+          element={isAuthenticated ? <ScheduleList /> : <Navigate to="/login" replace />}
+        />
+         <Route
+          path="/health-history"
+          element={isAuthenticated ? <HealthHistory /> : <Navigate to="/login" replace />}
+        />
+         <Route
+          path="/invoice-history"
+          element={isAuthenticated ? <InvoiceHistory /> : <Navigate to="/login" replace />}
         />
 
         {/* Trang Danh sách tiếp nhận */}
-        <Route
+        {/* <Route
           path="/reception-list"
           element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
-        />
+        /> */}
 
         {/* Trang Danh sách bệnh nhân */}
-        <Route
+        {/* <Route
           path="/patient-list"
           element={isAuthenticated ? <PatientList /> : <Navigate to="/login" replace />}
-        />
+        /> */}
 
         {/* Trang Đổi mật khẩu */}
         <Route
@@ -378,16 +407,33 @@ const App = () => {
           element={isAuthenticated ? <AccountSetting /> : <Navigate to="/login" replace />}
         />
 
-        {/* Trang Cài đặt tài khoản */}
-        <Route
+        {/* Trang Đơn khám bệnh */}
+        {/* <Route
           path="/health-form"
           element={isAuthenticated ? <HealthForm /> : <Navigate to="/login" replace />}
-        />
+        /> */}
+        
+        {/* Trang Đơn thuốc */}
+        {/* <Route
+          path="/prescription-form"
+          element={isAuthenticated ? <PrescriptionForm /> : <Navigate to="/login" replace />}
+        /> */}
+
+        {/* Trang Hóa đơn */}
+        {/* <Route
+          path="/invoice-form"
+          element={isAuthenticated ? <InvoiceForm /> : <Navigate to="/login" replace />}
+        /> */}
 
         {/* Điều hướng mặc định */}
-        <Route
+        {/* <Route
           path="/"
           element={isAuthenticated ? <Navigate to="/reception-form" replace /> : <Navigate to="/login" replace />}
+        /> */}
+
+       <  Route
+          path="/"
+          element={isAuthenticated ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />}
         />
 
         {/* Điều hướng sai đường dẫn */}

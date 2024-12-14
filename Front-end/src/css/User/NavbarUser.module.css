@@ -1,0 +1,80 @@
+/* Cấu trúc Navbar */
+.navbar {
+    background-color: #ffffff;
+    padding: 4px 41px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: all 0.4s ease;
+    z-index: 1000;
+  }
+
+  .navbar.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+  }
+  
+  /* Cấu trúc các tab */
+  .tabs {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 80px;
+    padding: 0;
+    width: 59%;
+  }
+  .tabLogo{
+    width: 3%;
+    margin-left: 18px;
+  }
+  .tabItem {
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    text-decoration: none;
+    position: relative; /* Để sử dụng pseudo-element */
+    transition: color 0.3s ease; /* Hiệu ứng chuyển đổi màu */
+    margin-right: 50px;
+    padding: 5px 0;
+    max-width: 180px;
+  }
+  
+  .tabItem a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .tabItem:hover {
+    color: #007bff; /* Chỉ thay đổi màu khi hover */
+  }
+  
+  /* Pseudo-element cho đường viền dưới */
+  .tabItem::after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 0; /* Đường viền mặc định ẩn */
+    height: 3px;
+    background-color: #007bff;
+    transition: width 0.3s ease; /* Hiệu ứng khi click */
+    transform: translateX(-50%);
+  }
+  
+  .tabItem.active {
+    color: #007bff; /* Màu chữ khi active */
+  }
+  
+  .tabItem.active::after {
+    width: 100%; /* Đường viền chỉ hiển thị khi active */
+  }
+  

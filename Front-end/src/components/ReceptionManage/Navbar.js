@@ -36,6 +36,18 @@ const Navbar = () => {
         >
           <Link to="/health-form">Đơn khám bệnh</Link>
         </li>
+        <li
+          className={`tab-item ${activeTab === 'prescriptionForm' ? 'active' : ''}`}
+          onClick={() => handleTabClick('prescriptionForm')}
+        >
+          <Link to="/prescription-form">Đơn thuốc</Link>
+        </li>
+        <li
+          className={`tab-item ${activeTab === 'invoiceForm' ? 'active' : ''}`}
+          onClick={() => handleTabClick('invoiceForm')}
+        >
+          <Link to="/invoice-form">Hóa đơn</Link>
+        </li>
       </ul>
     </div>
   );
