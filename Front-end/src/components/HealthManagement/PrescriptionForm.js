@@ -289,6 +289,7 @@ const handleMedicationChange = (id, field, value) => {
                                 fullWidth
                                 variant="outlined"
                                 InputProps={{
+                                ...params.InputProps,
                                     style: {
                                       fontSize: "15px", 
                                       backgroundColor: '#fff',

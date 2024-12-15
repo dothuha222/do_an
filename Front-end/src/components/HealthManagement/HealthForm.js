@@ -4,6 +4,18 @@ import React, { useState } from 'react';
 import styles from '../../css/HealthManagement/HealthForm.module.css'; // Import CSS styles
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { MdDelete, MdAdd } from "react-icons/md"
+import {
+    TextField,
+    Button,
+    IconButton,
+    Autocomplete,
+    Grid,
+    Box,
+    Select,
+    MenuItem,
+    FormControl
+  } from "@mui/material";
 
 const HealthForm = () => {
     const [formData, setFormData] = useState({
@@ -18,7 +30,7 @@ const HealthForm = () => {
         preliminaryDiagnosis: '',
         generalExamination: '',
         specificExamination: '',
-        service: '',
+        // services: '',
         summary: '',
     });
 
@@ -33,6 +45,30 @@ const HealthForm = () => {
         { id: 'BN001', department: 'ABC', doctorName: 'Nguyễn Văn B'}
     ];
 
+    const serviceData = [
+        {name: 'Khám tai - mũi - họng'},
+        {name: 'Khám da liễu'},
+        {name: 'Khám sản phụ khoa'},
+        {name: 'Khám nội khoa'},
+        {name: 'Khám sức khỏe tổng quát'},
+        {name: 'Khám sức khỏe định kỳ'},
+        {name: 'Xét nghiệm nước tiểu'},
+        {name: 'Xét nghiệm máu tổng quát'},
+        {name: 'Xét nghiệm sinh hóa'},
+        {name: 'Siêu âm ổ bụng'},
+        {name: 'Chụp X-quang phổi'},
+        {name: 'Chụp CT-Scan'},
+        {name: 'Chụp MRI'},
+        {name: 'Nội soi dạ dày'},
+        {name: 'Tiêm phòng cúm'},
+        {name: 'Tiêm phòng HPV'},
+        {name: 'Tư vấn dinh dưỡng'},
+    ]
+
+    const typeService = [
+        { name: "Cơ bản" },
+        { name: "Cao cấp" }
+    ]
     const validateForm = () => {
         const newErrors = {};
         if (!formData.weight) newErrors.weight = 'Cân nặng là bắt buộc';
@@ -92,6 +128,43 @@ const HealthForm = () => {
         }
     };
 
+    const [services, setServices] = useState([
+        { id: 1, name: "", type: ""},
+      ]);
+
+      const handleServiceChange = (id, field, value) => {
+            const updateServices = services.map((med) => {
+              if (med.id === id) {
+                const service = serviceData.find((d) => d.name === value);
+                return {
+                  ...med,
+                  [field]: value,
+                };
+              }
+              return med;
+            });
+            setServices(updateServices);
+          };
+    const addService = () => {
+        const newServices = {
+          id: services.length + 1,
+          name: "",
+          type: "",
+        };
+        setServices([...services, newServices]);
+      };
+    
+      // Xóa khối
+      const removeServices = (id) => {
+        const updateServices = services
+          .filter((med) => med.id !== id)
+          .map((med, index) => ({
+            ...med,
+            id: index + 1, // Cập nhật lại STT
+          }));
+        setServices(updateServices);
+      };
+    
     return (
         <div className={styles.healthForm}>
             <div className={styles.healthFormA}>
@@ -271,20 +344,108 @@ const HealthForm = () => {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label>Chỉ định dịch vụ</label>
-                            <select
-                                name="service"
-                                value={formData.service}
-                                onChange={handleInputChange}
+                        <div className={styles.FormThuoc} style={{ display: 'block,',marginBottom:'26px' }}>
+                        <label className={styles.FormThuocLable}>Chỉ định dịch vụ</label>
+                        {services.map((service, index) => (
+                            <div className={styles.boxService} key={service.id}>
+                            <Grid container spacing={2} alignItems="center">
+                                {/* STT */}
+                                <Grid item xs={1}>
+                                <TextField
+                                    value={service.id}
+                                    disabled
+                                    fullWidth
+                                    placeholder="STT"
+                                    InputProps={{
+                                    style: {
+                                        fontSize: "15px",
+                                        backgroundColor: '#fff',
+                                    },
+                                    }}
+                                />
+                                </Grid>
+
+                                {/* Tên dịch vụ (Autocomplete) */}
+                                <Grid item xs={6}>
+                                <Autocomplete
+                                    options={serviceData}
+                                    getOptionLabel={(option) => option.name}
+                                    value={serviceData.find((d) => d.name === service.name) || null}
+                                    onChange={(e, newValue) =>
+                                        handleServiceChange(service.id, "name", newValue?.name || "")
+                                    }
+                                    renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        placeholder="🔍 Tên dịch vụ"
+                                        fullWidth
+                                        variant="outlined"
+                                        InputProps={{
+                                        ...params.InputProps,
+                                        style: {
+                                            fontSize: "15px",
+                                            backgroundColor: '#fff',
+                                        },
+                                        }}
+                                    />
+                                    )}
+                                />
+                                </Grid>
+
+                                {/* Loại (Select) */}
+                                <Grid item xs={4}>
+                                <FormControl fullWidth>
+                                    <Select
+                                    value={service.type || ""}
+                                    onChange={(e) =>
+                                        handleServiceChange(service.id, "type", e.target.value)
+                                    }
+                                    displayEmpty
+                                    style={{
+                                        fontSize: "15px",
+                                        backgroundColor: '#fff',
+                                    }}
+                                    >
+                                         {/* Placeholder */}
+      <MenuItem value="" disabled>
+        Chọn loại dịch vụ
+      </MenuItem>
+                                    {typeService.map((option, index) => (
+                                        <MenuItem key={index} value={option.name}>
+                                        {option.name}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
+                                </Grid>
+                                {/* Nút Xóa */}
+                                {index !== 0 && (
+                                    <Grid item xs={1}>
+                                    <IconButton
+                                        onClick={() => removeServices(service.id)}
+                                        color="error"
+                                    >
+                                        <MdDelete />
+                                    </IconButton>
+                                    </Grid>
+                                )}
+                                </Grid>
+                            </div>
+                            ))}
+
+                            {/* Thêm khối mới */}
+                            <Button
+                                startIcon={<MdAdd />}
+                                variant="contained"
+                                color="primary"
+                                onClick={addService}
+                                style={{ marginTop: "16px" }}
                             >
-                                <option value="">Chọn dịch vụ</option>
-                                <option value="Xét nghiệm">Xét nghiệm</option>
-                                <option value="Chụp X-Quang">Chụp X-Quang</option>
-                            </select>
+                                Thêm dịch vụ
+                            </Button>
+                        </div>
                         </div>
                     </div>
-                </div>
                 <div className={styles.formGroup}>
                     <label>Tóm tắt kết quả khám bệnh</label>
                     <textarea

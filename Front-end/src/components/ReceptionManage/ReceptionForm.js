@@ -203,6 +203,9 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                   onChange={handleInputChange}
                   disabled={isDisabled || formData.bhyt !== 'Có'}
                   placeholder="Nhập mã số BHYT"
+                  style={{
+                    backgroundColor: isDisabled || formData.bhyt !== 'Có' ? '#E3F5FF' : 'white',
+                  }}
                 />
                 {errors.bhytCode && <span className={styles.error}>{errors.bhytCode}</span>}
               </div>
