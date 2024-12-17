@@ -1,12 +1,15 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../../css/ReceptionManage/ReceptionForm.module.css';
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { createReception, getReception,updateReception } from '../Services/ReceptionService';
+import { useParams } from 'react-router-dom';
 
 const ReceptionForm = ({ mode, receptionData, onClose }) => {
   const [formData, setFormData] = useState({
@@ -22,14 +25,17 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
     bhytCode: '',
   });
 
+  const {id} = useParams();
+
+  const navigator = useNavigate();
   const [errors, setErrors] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  useEffect(() => {
-    if (receptionData) {
-      setFormData(receptionData);
-    }
-  }, [receptionData]);
+  // useEffect(() => {
+  //   if (receptionData) {
+  //     setFormData(receptionData);
+  //   }
+  // }, [receptionData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +54,7 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
     setFormData({ ...formData, birthDate: date });
   };
 
-  const handleSaveAndPrint = () => {
+  const handleSaveAndPrint = (e) => {
     let validationErrors = {};
     if (!formData.fullName) validationErrors.fullName = 'Họ và tên là bắt buộc';
     if (!formData.birthDate) validationErrors.birthDate = 'Ngày sinh là bắt buộc';
@@ -63,10 +69,43 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
       setErrors(validationErrors);
       return;
     }
-
-    // Gửi dữ liệu đã sửa lên server
-    console.log('Lưu dữ liệu:', formData);
-    onClose();
+    else{
+      // setErrors({})
+      e.preventDefault();
+      if(id){
+        updateReception(id, formData).then((response) => {
+          console.log(response.data)
+          navigator('/reception-list')
+        })
+        .catch(error => {
+          console.error(error)
+        })
+        console.log('da sua')
+      }
+      else{
+        createReception(formData).then((response) => {
+          console.log(response.data)
+          navigator('/reception-list')
+          setFormData
+            ({
+              patientId: '',
+              fullName: '',
+              birthDate: '',
+              cccd: '',
+              gender: '',
+              address: '',
+              reason: '',
+              room: '',
+              bhyt: '', // Giá trị 'Có' hoặc 'Không'
+              bhytCode: '',
+            });
+        })
+        .catch(error => {
+          console.error(error)
+        })
+        console.log("da luu")
+      }
+    }
   };
 
   const handleCancel = () => {
@@ -74,11 +113,32 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
   };
 
   const handleConfirmCancel = () => {
-    onClose();
+    setFormData
+            ({
+              patientId: '',
+              fullName: '',
+              birthDate: '',
+              cccd: '',
+              gender: '',
+              address: '',
+              reason: '',
+              room: '',
+              bhyt: '', // Giá trị 'Có' hoặc 'Không'
+              bhytCode: '',
+            });
     setShowConfirmModal(false);
   };
 
   const isDisabled = mode === 'view';
+  useEffect(() => {
+    if(id){
+      getReception(id).then((res) => {
+        setFormData(res.data)
+      }).catch((err) => {
+        console.error(err);
+      })
+    }
+  },[id])
 
   return (
     <div className={styles.receptionForm}>

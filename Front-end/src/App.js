@@ -389,6 +389,17 @@ const App = () => {
           element={isAuthenticated ? <ReceptionList /> : <Navigate to="/login" replace />}
         />
 
+        {/* Chi tiết đơn tiếp nhận */}
+        <Route
+          path="/reception-form/:id" 
+          element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Sửa đơn tiếp nhận */}
+        <Route
+          path="/edit-reception-form/:id" 
+          element={isAuthenticated ? <ReceptionForm /> : <Navigate to="/login" replace />}
+        />
         {/* Trang Danh sách bệnh nhân */}
         <Route
           path="/patient-list"
