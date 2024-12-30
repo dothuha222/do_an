@@ -70,7 +70,7 @@ const Home = () => {
                     <ul style={{width:'50%'}}>
                         <li>Phòng khám tư nhân thành lập năm 2002, ban đầu đối mặt với nhiều khó khăn về cơ sở vật chất và nhân lực. Tuy nhiên, bệnh viện đã không ngừng nâng cao chất lượng khám chữa bệnh, đầu tư trang thiết bị hiện đại và áp dụng công nghệ y học tiên tiến. 
                         </li>
-                        <li>Phòng khám tư nhân thành lập năm 2002, ban đầu đối mặt với nhiều khó khăn về cơ sở vật chất và nhân lực. Tuy nhiên, bệnh viện đã không ngừng nâng cao chất lượng khám chữa bệnh, đầu tư trang thiết bị hiện đại và áp dụng công nghệ y học tiên tiến. 
+                        <li>Luôn đặt bệnh nhân làm ưu tiên hàng đầu và đem lại môi trường khám chữa bệnh thân thiện, hiệu quả với những thiết bị y khoa hiện đại, phấn đấu xây dựng và trở thành bệnh viện: Uy tín - Niềm tin - Chất lượng của người bệnh. 
                         </li>
                     </ul>
                     <div style={{width:'45%'}}>

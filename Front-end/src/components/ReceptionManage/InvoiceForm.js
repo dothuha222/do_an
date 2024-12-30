@@ -203,11 +203,9 @@ const InvoiceForm = () => {
                     </div>
                     <div className={styles.buttons}>
                         <button className={styles.savePrint} onClick={handleSaveAndPrint}>
-                            <FaPrint style={{ marginRight: '8px' }} /> <span>LƯU VÀ IN PHIẾU</span>
+                            <FaPrint style={{ marginLeft: '8px' }} /> <span style={{ marginLeft: '8px' }}>THANH TOÁN</span>
                         </button>
-                        <button className={styles.cancel} onClick={handleCancel}>
-                            <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
-                        </button>
+                        
                     </div>
                 </div>
             </div>

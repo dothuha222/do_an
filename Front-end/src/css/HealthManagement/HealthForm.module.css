@@ -108,6 +108,7 @@ width: 48%;
 .formColumn{
     display: flex;
     flex-direction: column;
+    width: 12%;
 }
 
 .formColumn label{
@@ -166,6 +167,13 @@ background-color: #588ad7;
 color: #fff;
 display: flex;
 align-items: center;
+}
+
+.buttons .viewHistory {
+    background-color: #478148;
+    color: #fff;
+    display: flex;
+    align-items: center;
 }
 
 .buttons .savePrint:hover {

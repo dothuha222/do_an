@@ -36,49 +36,42 @@ const Header = () => {
       </NavLink>
         {/* Vị trí bên phải */}
         <div className={styles.headerRight} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.userInfo}>
-            <strong>Đỗ Thu Hà</strong>
-            <small>Lễ tân</small>
+          <div className={styles.loginDev} onClick={() => navigate('/login')}>
+            <strong>Đăng nhập</strong>
           </div>
-          <div className={styles.headerAvatar}>
-            <img src={avatar} alt="Avatar" />
-          </div>
-          <button className={styles.dropdownToggleBtn} onClick={toggleDropdown}>
-            <i className="fas fa-chevron-down"></i>
-          </button>
-          {isDropdownOpen && (
-            <div className={styles.dropdownMenu}>
-              <button
-                className={styles.dropdownItem}
-                onClick={() => {
-                  closeDropdown();
-                  navigate('/account-settings');
-                }}
-              >
-                Cài đặt tài khoản
-              </button>
-              <button
-                className={styles.dropdownItem}
-                onClick={() => {
-                  closeDropdown();
-                  navigate('/change-password');
-                }}
-              >
-                Đổi mật khẩu
-              </button>
-              <button
-                className={styles.dropdownItem}
-                onClick={() => {
-                  closeDropdown();
-                  handleLogout();
-                }}
-              >
-                Đăng xuất
-              </button>
+          <div className={styles.userDev}>
+            <div className={styles.userInfo}>
+              {/* <strong>Nguyễn Văn Anh</strong> */}
+              {/* <strong>Đỗ Thu Hà</strong> */}
+              <strong>Phạm Minh Phương</strong>
             </div>
-          )}
+            <button className={styles.dropdownToggleBtn} onClick={toggleDropdown}>
+              <i className="fas fa-chevron-down"></i>
+            </button>
+            {isDropdownOpen && (
+              <div className={styles.dropdownMenu}>
+                <button
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    closeDropdown();
+                    navigate('/change-password');
+                  }}
+                >
+                  Đổi mật khẩu
+                </button>
+                <button
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    closeDropdown();
+                    handleLogout();
+                  }}
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-
         {/* Tạo backdrop khi dropdown mở */}
         {isDropdownOpen && <div onClick={closeDropdown} className={styles.dropdownBackdrop}></div>}
       </header>

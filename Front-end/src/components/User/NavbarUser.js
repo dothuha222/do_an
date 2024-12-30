@@ -57,12 +57,12 @@ const NavbarUser = () => {
         >
         <Link to="/health-history">Lịch sử bệnh án</Link>
         </li>
-        <li
+        {/* <li
           className={`${styles.tabItem} ${activeTab === 'invoiceHistory' ? styles.active : ''}`}
           onClick={() => handleTabClick('invoiceHistory')}
         >
           <Link to="/invoice-history">Hóa đơn</Link>
-        </li>
+        </li> */}
       </ul>
       
     </div>

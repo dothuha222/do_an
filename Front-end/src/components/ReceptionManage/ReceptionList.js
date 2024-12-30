@@ -19,40 +19,67 @@ const ReceptionList = () => {
   const [currentPage, setCurrentPage] = useState(1); // Quản lý trang hiện tại
   const itemsPerPage = 5; // Số lượng bản ghi mỗi trang
 
-  // const [receptionList, setReceptionList] = useState([
-  //   // Dữ liệu giả lập như ban đầu
-  //   {
-  //     id: 1,
-  //     patientCode: 'BN001',
-  //     patientName: 'Nguyen Van A',
-  //     receptionCode: 'RN001',
-  //     receptionTime: '2024-11-28T09:00:00',
-  //     room: '101A',
-  //     status: 'Đợi khám',
-  //   },
-  //   {
-  //       id: 2,
-  //       patientCode: 'BN002',
-  //       patientName: 'Tran Thi B',
-  //       receptionCode: 'RN002',
-  //       receptionTime: '2024-11-28T10:00:00',
-  //       room: '102B',
-  //       status: 'Đang khám',
-  //     },
-  //     {
-  // ]);
+  const [receptionList, setReceptionList] = useState([
+    // Dữ liệu giả lập như ban đầu
+    {
+      id: 1,
+      patientCode: 'BN2100',
+      patientName: 'Nguyễn Văn Minh',
+      receptionCode: 'RN310',
+      receptionTime: '25/12/2024',
+      room: '102B',
+      status: 'Đợi khám',
+    },
+    {
+        id: 2,
+        patientCode: 'BN1112',
+        patientName: 'Trần Thanh Bình',
+        receptionCode: 'RN297',
+        receptionTime: '25/12/2024',
+        room: '102B',
+        status: 'Đợi khám',
+      },
+      {
+        id: 3,
+        patientCode: 'BN1002',
+        patientName: 'Phạm Thu Trà',
+        receptionCode: 'RN288',
+        receptionTime: '25/12/2024',
+        room: '102B',
+        status: 'Đợi khám',
+      },
+      {
+        id: 4,
+        patientCode: 'BN0815',
+        patientName: 'Nguyễn Trung Quân',
+        receptionCode: 'RN287',
+        receptionTime: '25/12/2024',
+        room: '102B',
+        status: 'Đợi khám',
+      },
+      {
+        id: 5,
+        patientCode: 'BN1012',
+        patientName: 'Trần Ngọc Lan',
+        receptionCode: 'RN266',
+        receptionTime: '24/12/2024',
+        room: '102B',
+        status: 'Đợi khám',
+      },
 
-  const [receptionList, setReceptionList] = useState([])
-  const getAllReception = () => {
-    listReception().then((response) => {
-      setReceptionList(response.data)
-    }).catch((error) => {
-      console.error(error);
-    })
-  }
-  useEffect(() => {
-    getAllReception();
-  }, [])
+  ]);
+
+  // const [receptionList, setReceptionList] = useState([])
+  // const getAllReception = () => {
+  //   listReception().then((response) => {
+  //     setReceptionList(response.data)
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   })
+  // }
+  // useEffect(() => {
+  //   getAllReception();
+  // }, [])
   // Đổi định dạng ngày tháng thành dd/MM/yyyy
   const formatDate = (date) => {
     if (!date) return '';
@@ -121,14 +148,14 @@ const ReceptionList = () => {
     navigator(`/edit-reception-form/${id}`)
   }
   
-  const removeReception = (id) => {
-    console.log(id)
-    deleteReception(id).then((res) =>{
-      getAllReception();
-    }).catch(err => {
-      console.error(err)
-    })
-  }
+  // const removeReception = (id) => {
+  //   console.log(id)
+  //   deleteReception(id).then((res) =>{
+  //     getAllReception();
+  //   }).catch(err => {
+  //     console.error(err)
+  //   })
+  // }
 
   return (
     <div className={styles.receptionList}>
@@ -183,7 +210,7 @@ const ReceptionList = () => {
             <th>Thời gian tiếp nhận</th>
             <th>Phòng khám</th>
             <th>Chi tiết</th>
-            <th>Hành động</th>
+            {/* <th>Hành động</th> */}
             <th>Trạng thái</th>
           </tr>
         </thead>
@@ -201,7 +228,7 @@ const ReceptionList = () => {
                 <td>{item.patientCode}</td>
                 <td>{item.patientName}</td>
                 <td>{item.receptionCode}</td>
-                <td>{formatDate(new Date(item.receptionTime))}</td>
+                <td>{item.receptionTime}</td>
                 <td>{item.room}</td>
                 <td>
                   <button
@@ -211,28 +238,30 @@ const ReceptionList = () => {
                     Xem
                   </button>
                 </td>
-                <td>
-                  <button
+                
+                  {/* <button
                     className={styles.editButton}
                     onClick={() => editDetail(item.patientCode)}
                   >
                     <FaPencilAlt />
-                  </button>
-                  <button
-                    className={styles.deleteButton}
+                  </button> */}
+                   {/* <button
+                    className={styles.deleteButton}  
                     onClick={() =>
                       window.confirm('Bạn muốn xóa bản ghi này không?') &&
-                      removeReception(item.patientCode)
+                    removeReception(item.patientCode)
                     }
                   >
                     <FaTrash />
-                  </button>
-                </td>
+                  </button>  */}
+                
                 <td
                   style={{
                     color:
-                      item.status === 'Đợi khám'
+                      item.status === 'Chờ duyệt'
                         ? 'blue'
+                        : item.status === 'Đợi khám'
+                        ? '#ff5200'
                         : item.status === 'Đang khám'
                         ? '#e6c900'
                         : 'green',

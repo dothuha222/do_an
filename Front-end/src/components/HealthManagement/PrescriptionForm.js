@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from '../../css/HealthManagement/PrescriptionForm.module.css'; // Import CSS styles
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { FaHistory } from 'react-icons/fa';
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import {
     TextField,
@@ -112,10 +113,21 @@ const handleMedicationChange = (id, field, value) => {
     const [selectedDate, setSelectedDate] = useState(null); // State lưu giữ ngày đã chọn
 
     const patientData = [
-        { id: 'BN001', name: 'Nguyễn Quỳnh Lan', dob: '02/09/1990', gender: 'Nữ' }
+        {id: 'BN2098',
+            name: 'Nguyễn Văn Minh',
+            dob: '08/11/1970',
+            cccd: '034300112686',
+            gender: 'Nam',
+            address: 'Duy Tân, Cầu Giấy',
+            reason: 'Đau dạ dày',
+            room: '102B',
+            phoneNumber: '0988176563', 
+            bhytCode: 'DN47888025341',
+            receptionTime: '25/12/2024',
+            receptionCode: 'RN310'}
     ];
     const clinicData = [
-        { id: 'BN001', department: 'ABC', doctorName: 'Nguyễn Văn B'}
+        { id: 'BN001', department: '102B', doctorName: 'Phạm Minh Phương'}
     ];
 
     const validateForm = () => {
@@ -220,6 +232,9 @@ const handleMedicationChange = (id, field, value) => {
                     <div className={styles.buttons}>
                         <button className={styles.savePrint} onClick={handleSaveAndPrint}>
                             <FaPrint style={{ marginRight: '8px' }} /> <span>LƯU VÀ IN PHIẾU</span>
+                        </button>
+                        <button className={styles.viewHistory} onClick={handleSaveAndPrint}>
+                            <FaHistory style={{ marginRight: '8px' }} /> <span>XEM LỊCH SỬ</span>
                         </button>
                         <button className={styles.cancel} onClick={handleCancel}>
                             <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>

@@ -172,6 +172,13 @@ align-items: center;
 background-color: #356aa0;
 }
 
+.buttons .viewHistory {
+    background-color: #478148;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
 .buttons .cancel {
 background-color: #dc3545;
 color: #fff;

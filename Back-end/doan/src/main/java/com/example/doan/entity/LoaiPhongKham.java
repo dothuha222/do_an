@@ -6,9 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "loai_phong_kham")
+@Data
 public class LoaiPhongKham {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,8 @@ public class LoaiPhongKham {
 
 	@Column(name = "mo_ta")
 	private String mo_ta;
+	
+	public LoaiPhongKham() {}
 
 	public LoaiPhongKham(Integer loai_pk_id, String ten, String mo_ta) {
 		super();

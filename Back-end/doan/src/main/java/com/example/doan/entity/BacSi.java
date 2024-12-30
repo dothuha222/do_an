@@ -17,10 +17,15 @@ public class BacSi extends NguoiDung {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "phong_kham_id")
 	private PhongKham phong_kham;
+	
+	public BacSi() {
+		super();
+	}
+	
 
-	public BacSi(Integer nguoi_dung_id, String ten, String ns, String vai_tro, String sdt, String bang_cap) {
-		super(nguoi_dung_id, ten, ns, vai_tro, sdt);
-		this.bang_cap = bang_cap;
+	public BacSi(Integer nguoi_dung_id, String ten, String ns, String gioi_tinh, String vai_tro, String dia_chi,
+			String sdt, String username, String password) {
+		super(nguoi_dung_id, ten, ns, gioi_tinh, vai_tro, dia_chi, sdt, username, password);
 	}
 
 	public String getBang_cap() {
@@ -31,12 +36,17 @@ public class BacSi extends NguoiDung {
 		this.bang_cap = bang_cap;
 	}
 
+	public PhongKham getPhong_kham() {
+		return phong_kham;
+	}
+
+	public void setPhong_kham(PhongKham phong_kham) {
+		this.phong_kham = phong_kham;
+	}
+
 	@Override
 	public String toString() {
-		return "BacSi [bang_cap=" + bang_cap + ", getBang_cap()=" + getBang_cap() + ", getNguoi_dung_id()="
-				+ getNguoi_dung_id() + ", getTen()=" + getTen() + ", getNs()=" + getNs() + ", getVai_tro()="
-				+ getVai_tro() + ", getSdt()=" + getSdt() + ", toString()=" + super.toString() + ", getClass()="
-				+ getClass() + ", hashCode()=" + hashCode() + "]";
+		return "BacSi [bang_cap=" + bang_cap + ", phong_kham=" + phong_kham + "]";
 	}
 
 }

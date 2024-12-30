@@ -17,27 +17,27 @@ const HealthHistory = () => {
     // Dữ liệu giả lập như ban đầu
     {
       id: 1,
-      healthCode: 'RN001',
-      ngayKham: '14-12-2024',
-      doctor: 'Nguyễn Văn A',
+      healthCode: 'KB180',
+      ngayKham: '14/01/2024',
+      doctor: 'Trần Văn Mạnh',
     },
     {
         id: 2,
-        healthCode: 'RN002',
-        ngayKham: '14-12-2024',
-        doctor: 'Nguyễn Văn A',
+        healthCode: 'KB131',
+        ngayKham: '01/11/2022',
+        doctor: 'Phạm Minh Phương',
     },
     {
         id: 3,
-        healthCode: 'RN003',
-        ngayKham: '14-12-2024',
-        doctor: 'Nguyễn Văn B',
+        healthCode: 'KB075',
+        ngayKham: '21/01/2022',
+        doctor: 'Nguyễn Thị Bích',
     },
     {
         id: 4,
-        healthCode: 'RN004',
-        ngayKham: '14-12-2024',
-        doctor: 'Nguyễn Văn B',
+        healthCode: 'KB002',
+        ngayKham: '12/04/2021',
+        doctor: 'Nguyễn Tiến Minh',
     },
     // Thêm dữ liệu khác...
   ]);
@@ -126,6 +126,7 @@ const HealthHistory = () => {
             <th>Bác sĩ khám</th>
             <th>Chi tiết bệnh án</th>
             <th>Đơn thuốc</th>
+            <th>Hóa đơn</th>
           </tr>
         </thead>
         <tbody>
@@ -146,6 +147,14 @@ const HealthHistory = () => {
                   <button
                     className={styles.detailButton}
                     onClick={() => alert(`Xem chi tiết ${item.receptionCode}`)}
+                  >
+                    Xem
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className={styles.detailButton}
+                    onClick={() => alert(`Sửa ${item.receptionCode}`)}
                   >
                     Xem
                   </button>

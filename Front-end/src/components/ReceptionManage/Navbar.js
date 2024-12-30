@@ -23,30 +23,49 @@ const Navbar = () => {
           onClick={() => handleTabClick('receptionList')}
         >
           <Link to="/reception-list">Danh sách tiếp nhận</Link>
+          {/* <Link to="/reception-list">Danh sách khám bệnh</Link> */}
+        </li>
+        <li
+          className={`tab-item ${activeTab === 'patientRegister' ? 'active' : ''}`}
+          onClick={() => handleTabClick('patientRegister')}
+        >
+          <Link to="/patient-register">Đăng ký tài khoản</Link>
         </li>
         <li
           className={`tab-item ${activeTab === 'patientList' ? 'active' : ''}`}
           onClick={() => handleTabClick('patientList')}
         >
-          <Link to="/patient-list">Danh sách bệnh nhân</Link>
+          <Link to="/patient-list">Danh sách tài khoản</Link>
         </li>
-        <li
+        {/* <li
           className={`tab-item ${activeTab === 'healthForm' ? 'active' : ''}`}
           onClick={() => handleTabClick('healthForm')}
         >
           <Link to="/health-form">Đơn khám bệnh</Link>
-        </li>
-        <li
+        </li> */}
+        {/* <li
           className={`tab-item ${activeTab === 'prescriptionForm' ? 'active' : ''}`}
           onClick={() => handleTabClick('prescriptionForm')}
         >
           <Link to="/prescription-form">Đơn thuốc</Link>
-        </li>
+        </li> */}
         <li
           className={`tab-item ${activeTab === 'invoiceForm' ? 'active' : ''}`}
           onClick={() => handleTabClick('invoiceForm')}
         >
-          <Link to="/invoice-form">Hóa đơn</Link>
+          <Link to="/invoice-list">Hóa đơn</Link>
+        </li>
+        <li
+          className={`tab-item ${activeTab === 'drugList' ? 'active' : ''}`}
+          onClick={() => handleTabClick('drugList')}
+        >
+          <Link to="/drug-list">Thuốc</Link>
+        </li>
+        <li
+          className={`tab-item ${activeTab === 'dichvuList' ? 'active' : ''}`}
+          onClick={() => handleTabClick('dichvuList')}
+        >
+          <Link to="/dichvu-list">Dịch vụ khám bệnh</Link>
         </li>
       </ul>
     </div>

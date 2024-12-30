@@ -11,9 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "don_tiep_nhan")
+@Data
 public class DonTiepNhan {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +43,8 @@ public class DonTiepNhan {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "trang_thai_don_id")
 	private TrangThaiDon trang_thai_don;
+	
+	public DonTiepNhan() {}
 
 	public DonTiepNhan(Integer don_tiep_nhan_id, Date date, String ly_do_kham, BenhNhan benh_nhan, LeTan leTan,
 			PhongKham phong_kham, TrangThaiDon trang_thai_don) {

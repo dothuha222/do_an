@@ -76,7 +76,11 @@
   
   .datePicker{
     width: 189% !important;
+    background-color: #e3f5ff !important;
   }
+
+  .datePickerB{
+    width: 189% !important;}
   /* Style for error messages */
   .error {
     color: #ff3333;

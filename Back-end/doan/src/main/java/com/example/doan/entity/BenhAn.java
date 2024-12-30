@@ -16,9 +16,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "benh_an")
+@AllArgsConstructor
 public class BenhAn {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +33,6 @@ public class BenhAn {
 	@Column(name = "thoi_gian")
 	private Date thoi_gian;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "chi_so_id")
-	private List<ChiSoSucKhoe> ds_chi_so;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "don_tiep_nhan_id")
 	private DonTiepNhan don_tiep_nhan;
@@ -46,18 +44,10 @@ public class BenhAn {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "dich_vu_benh_an", joinColumns = @JoinColumn(name = "benh_an_id"), inverseJoinColumns = @JoinColumn(name = "dich_vu_id"))
 	private List<DichVu> ds_dich_vu;
+	
+	public BenhAn() {}
 
-	public BenhAn(Integer benh_an_id, String ket_luan, Date thoi_gian, List<ChiSoSucKhoe> ds_chi_so,
-			DonTiepNhan don_tiep_nhan, BacSi bac_si, List<DichVu> ds_dich_vu) {
-		super();
-		this.benh_an_id = benh_an_id;
-		this.ket_luan = ket_luan;
-		this.thoi_gian = thoi_gian;
-		this.ds_chi_so = ds_chi_so;
-		this.don_tiep_nhan = don_tiep_nhan;
-		this.bac_si = bac_si;
-		this.ds_dich_vu = ds_dich_vu;
-	}
+	
 
 	public Integer getBenh_an_id() {
 		return benh_an_id;
@@ -81,14 +71,6 @@ public class BenhAn {
 
 	public void setThoi_gian(Date thoi_gian) {
 		this.thoi_gian = thoi_gian;
-	}
-
-	public List<ChiSoSucKhoe> getDs_chi_so() {
-		return ds_chi_so;
-	}
-
-	public void setDs_chi_so(List<ChiSoSucKhoe> ds_chi_so) {
-		this.ds_chi_so = ds_chi_so;
 	}
 
 	public DonTiepNhan getDon_tiep_nhan() {
@@ -118,7 +100,7 @@ public class BenhAn {
 	@Override
 	public String toString() {
 		return "BenhAn [benh_an_id=" + benh_an_id + ", ket_luan=" + ket_luan + ", thoi_gian=" + thoi_gian
-				+ ", ds_chi_so=" + ds_chi_so + ", don_tiep_nhan=" + don_tiep_nhan + ", bac_si=" + bac_si
+				+ ", ds_chi_so=" + ", don_tiep_nhan=" + don_tiep_nhan + ", bac_si=" + bac_si
 				+ ", ds_dich_vu=" + ds_dich_vu + "]";
 	}
 

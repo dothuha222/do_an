@@ -38,11 +38,6 @@ const Login = () => {
             Đăng nhập
           </button>
         </form>
-
-        {/* Đăng ký */}
-        <p className={styles.registerLink}>
-          Bạn chưa có tài khoản? <Link to="/register">Đăng ký ngay!</Link>
-        </p>
       </div>
     </div>
   );

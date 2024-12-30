@@ -17,32 +17,46 @@ const ScheduleList = () => {
     // Dữ liệu giả lập như ban đầu
     {
       id: 1,
-      receptionCode: 'RN001',
-      appointTime: '14-12-2024',
+      receptionCode: 'RN300',
+      appointTime: '25/12/2024',
       room: '--',
-      status: 'Chờ xác nhận',
+      status: 'Chờ duyệt',
     },
     {
         id: 2,
-        receptionCode: 'RN002',
-        appointTime: '14-12-2024',
+        receptionCode: 'RN201',
+        appointTime: '14/01/2024',
         room: '101A',
-        status: 'Đã xác nhận',
+        status: 'Đã duyệt',
     },
     {
         id: 3,
-        receptionCode: 'RN003',
-        appointTime: '14-12-2024',
+        receptionCode: 'RN115',
+        appointTime: '03/05/2023',
         room: '--',
         status: 'Từ chối',
     },
     {
         id: 4,
-        receptionCode: 'RN004',
-        appointTime: '14-12-2024',
-        room: '101A',
-        status: 'Đã xác nhận',
+        receptionCode: 'RN064',
+        appointTime: '01/11/2022',
+        room: '105B',
+        status: 'Đã duyệt',
     },
+    {
+      id: 5,
+      receptionCode: 'RN025',
+      appointTime: '21/01/2022',
+      room: '302A',
+      status: 'Đã duyệt',
+  },
+  {
+    id: 6,
+    receptionCode: 'RN004',
+    appointTime: '01/11/2022',
+    room: '101A',
+    status: 'Đã duyệt',
+},
     // Thêm dữ liệu khác...
   ]);
 
@@ -183,9 +197,9 @@ const ScheduleList = () => {
                 <td
                   style={{
                     color:
-                      item.status === 'Chờ xác nhận'
+                      item.status === 'Chờ duyệt'
                         ? 'blue'
-                        : item.status === 'Đã xác nhận'
+                        : item.status === 'Đã duyệt'
                         ? 'green'
                         : 'red',
                   }}
