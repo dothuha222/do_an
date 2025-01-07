@@ -8,110 +8,145 @@ import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
-import { createReception, getReception,updateReception } from '../Services/ReceptionService';
+// import { createReception, getReception,updateReception } from '../Services/PatientService';
 import { useParams } from 'react-router-dom';
+import { createDontiepnhan, getAllPK } from '../Services/LeTanService';
 
-const ReceptionForm = ({ mode, receptionData, onClose }) => {
+
+const ReceptionForm = ({userId}) => {
+
   const [formData, setFormData] = useState({
-    // patientId: '',
-    // fullName: '',
-    // birthDate: '',
-    // cccd: '',
-    // gender: '',
-    // address: '',
-    // reason: '',
-    // room: '',
-    // phoneNumber:'',
-    // bhytCode: '',
-    
-    patientId: 'BN2098',
-    fullName: 'Nguyễn Văn Minh',
-    birthDate: '08/11/1970',
+    ly_do_kham: '',
     cccd: '',
-    gender: 'Nam',
-    address: 'Duy Tân, Cầu Giấy',
-    reason: '',
-    room: '102B',
-    phoneNumber: '0988176563', 
-    bhytCode: 'DN47888025341',
-    receptionTime: '25/12/2024',
-    receptionCode: 'RN310'
+    le_tan_id: userId,
+    phong_kham_id: '',
+    trang_thai_don_id: 3,
   });
+  const [phongKhams, setPhongKhams] = useState([]); 
+  // const [selectedRoom, setSelectedRoom] = useState("")
+  const [selectedRoomId, setSelectedRoomId] = useState("");
+  useEffect(() => {
+    if (userId) {
+      setFormData((prev) => ({
+        ...prev,
+        le_tan_id: userId, 
+      }));
+    }
+  }, [userId]);
 
   const {id} = useParams();
+
+  console.log(formData)
 
   const navigator = useNavigate();
   const [errors, setErrors] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // useEffect(() => {
-  //   if (receptionData) {
-  //     setFormData(receptionData);
-  //   }
-  // }, [receptionData]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  useEffect(() => {
+    const fetchPhongKhams = async () => {
+        try {
+            const response = await getAllPK();
+            console.log(response.data)
+            setPhongKhams(response.data);
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu phòng khám:", error);
+        }
+    };
 
+    fetchPhongKhams();
+}, []);
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, birthDate: date });
-  };
+// const handlePKChange = (event) => {
+//   const { name, value } = event.target;
+//   setSelectedRoom(value);
+//   setErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); // Xóa lỗi nếu có
+// };
+
+const handlePKChange = (event) => {
+  const selectedId = event.target.value; // Lấy id từ value của <option>
+  setSelectedRoomId(selectedId);
+  setErrors((prevErrors) => ({ ...prevErrors, room: "" })); // Xóa lỗi nếu có
+};
 
   const handleSaveAndPrint = (e) => {
-    let validationErrors = {};
-    if (!formData.fullName) validationErrors.fullName = 'Họ và tên là bắt buộc';
-    if (!formData.birthDate) validationErrors.birthDate = 'Ngày sinh là bắt buộc';
-    if (!formData.cccd) validationErrors.cccd = 'CCCD là bắt buộc';
-    if (!formData.gender) validationErrors.gender = 'Giới tính là bắt buộc';
-    if (!formData.address) validationErrors.address = 'Địa chỉ là bắt buộc';
-    if (!formData.reason) validationErrors.reason = 'Lý do khám là bắt buộc';
-    if (!formData.room) validationErrors.room = 'Phòng khám là bắt buộc';
-    if (!formData.phoneNumber) validationErrors.phoneNumber = 'Số điện thoại là bắt buộc';
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+     e.preventDefault();
+    console.log(formData);
+    const payload = { 
+      ...formData,
+      phong_kham_id: selectedRoomId
     }
-    else{
-      // setErrors({})
-      e.preventDefault();
-      if(id){
-        updateReception(id, formData).then((response) => {
-          console.log(response.data)
-          navigator('/reception-list')
-        })
-        .catch(error => {
-          console.error(error)
-        })
-        console.log('da sua')
-      }
-      else{
-        createReception(formData).then((response) => {
-          console.log(response.data)
-          navigator('/reception-list')
-          setFormData
+    createDontiepnhan(payload).then(response => {
+      alert('Gui thanh cong!')
+      console.log(response.data)
+      navigator('/reception-list')
+      setFormData
             ({
-              // patientId: '',
-              fullName: '',
-              birthDate: '',
+              ly_do_kham: '',
               cccd: '',
-              gender: '',
-              address: '',
-              reason: '',
-              room: '',
-              phoneNumber: '', 
-              bhytCode: '',
+              le_tan_id: '',
+              phong_kham_id: '',
+              trang_thai_don_id: 4,
             });
-        })
-        .catch(error => {
-          console.error(error)
-        })
-        console.log("da luu")
-      }
-    }
+    })
+    .catch(error => {
+        console.error(error)
+        alert('Không tìm thấy bệnh nhân, kiểm tra lại số CCCD')
+    })
+    // let validationErrors = {};
+    // if (!formData.fullName) validationErrors.fullName = 'Họ và tên là bắt buộc';
+    // if (!formData.birthDate) validationErrors.birthDate = 'Ngày sinh là bắt buộc';
+    // if (!formData.cccd) validationErrors.cccd = 'CCCD là bắt buộc';
+    // if (!formData.gender) validationErrors.gender = 'Giới tính là bắt buộc';
+    // if (!formData.address) validationErrors.address = 'Địa chỉ là bắt buộc';
+    // if (!formData.reason) validationErrors.reason = 'Lý do khám là bắt buộc';
+    // if (!formData.room) validationErrors.room = 'Phòng khám là bắt buộc';
+    // if (!formData.phoneNumber) validationErrors.phoneNumber = 'Số điện thoại là bắt buộc';
+
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
+    // else{
+    //   // setErrors({})
+    //   e.preventDefault();
+    //   if(id){
+    //     updateReception(id, formData).then((response) => {
+    //       console.log(response.data)
+    //       navigator('/reception-list')
+    //     })
+    //     .catch(error => {
+    //       console.error(error)
+    //     })
+    //     console.log('da sua')
+    //   }
+    //   else{
+    //     createReception(formData).then((response) => {
+    //       console.log(response.data)
+    //       navigator('/reception-list')
+    //       setFormData
+    //         ({
+    //           // patientId: '',
+    //           fullName: '',
+    //           birthDate: '',
+    //           cccd: '',
+    //           gender: '',
+    //           address: '',
+    //           reason: '',
+    //           room: '',
+    //           phoneNumber: '', 
+    //           bhytCode: '',
+    //         });
+    //     })
+    //     .catch(error => {
+    //       console.error(error)
+    //     })
+    //     console.log("da luu")
+    //   }
+    // }
   };
 
   const handleCancel = () => {
@@ -121,80 +156,31 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
   const handleConfirmCancel = () => {
     setFormData
             ({
-              // patientId: '',
-              fullName: '',
-              birthDate: '',
+              ly_do_kham: '',
               cccd: '',
-              gender: '',
-              address: '',
-              reason: '',
-              room: '',
-              phoneNumber: '', 
-              bhytCode: '',
+              le_tan_id: '',
+              phong_kham_id: '',
+              trang_thai_don_id: 4,
             });
     setShowConfirmModal(false);
   };
+  console.log(selectedRoomId)
 
-  const isDisabled = mode === 'view';
-  useEffect(() => {
-    if(id){
-      getReception(id).then((res) => {
-        setFormData(res.data)
-      }).catch((err) => {
-        console.error(err);
-      })
-    }
-  },[id])
 
   return (
     <div className={styles.receptionForm}>
-      {!isDisabled && (
         <div className={styles.buttons}>
           <button onClick={handleSaveAndPrint} className={`${styles.btn} ${styles.savePrint}`}>
             <FaPrint style={{ marginRight: '8px' }} /> <span>LƯU VÀ IN PHIẾU</span>
-             {/* <span>KHÁM BỆNH</span> */}
-             {/* <span>DUYỆT ĐƠN</span> */}
           </button>
           <button onClick={handleCancel} className={`${styles.btn} ${styles.cancel}`}>
             <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
           </button>
         </div>
-      )}
-      {/* <div className={styles.formSection}>
-      <form>
-      <h3 className={styles.formSectionTitle}>Thông tin bệnh nhân</h3>
-      </form>
-      </div> */}
 
       <div className={styles.formSection}>
         <form>
           <h3 className={styles.formSectionTitle}>Thông tin phiếu</h3>
-          <div className={styles.formFlex}>
-            <div className={styles.formFlex1}>
-              {/* <div className={styles.formGroup}>
-                <label>Mã đơn tiếp nhận</label>
-                <input
-                  type="text"
-                  name="receiptId"
-                  value={formData.receptionCode}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
-                />
-              </div> */}
-            </div>
-            {/* <div className={styles.formFlex1}>
-              <div className={styles.formGroup}>
-                <label>Ngày khám</label>
-                <input
-                  type="text"
-                  name="visitDate"
-                  value={formData.receptionTime}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
-                />
-              </div>
-            </div> */}
-          </div>
           <div className={styles.formFlex}>
             <div className={styles.formFlex1}>
             <div className={styles.formGroup}>
@@ -204,9 +190,6 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                   name="cccd"
                   value={formData.cccd}
                   onChange={handleInputChange}
-                  disabled={isDisabled}
-                  // disabled
-                  // style={{ backgroundColor: '#e3f5ff' }}
                 />
                 {errors.cccd && <span className={styles.error}>{errors.cccd}</span>}
               </div>
@@ -214,26 +197,19 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                 <label>Lý do khám <span style={{ color: 'red' }}>*</span></label>
                 <input
                   type="text"
-                  name="reason"
-                  value={formData.reason}
+                  name="ly_do_kham"
+                  value={formData.ly_do_kham}
                   onChange={handleInputChange}
-                  // disabled={isDisabled}
-                  disabled
-                  // style={{ backgroundColor: '#e3f5ff' }}
                 />
-                {errors.reason && <span className={styles.error}>{errors.reason}</span>}
+                {errors.ly_do_kham && <span className={styles.error}>{errors.ly_do_kham}</span>}
               </div>
             </div>
-            <div className={styles.formFlex1}>
+            {/* <div className={styles.formFlex1}>
               <div className={styles.formGroup}>
                 <label>Phòng khám <span style={{ color: 'red' }}>*</span></label>
                 <select
                   name="room"
-                  // value={formData.room}
                   onChange={handleInputChange}
-                  // disabled={isDisabled}
-                  // disabled
-                  // style={{ backgroundColor: '#e3f5ff' }}
                 >
                   <option value="">Chọn phòng khám</option>
                   <option value="101A">Phòng khám 101A</option>
@@ -241,18 +217,30 @@ const ReceptionForm = ({ mode, receptionData, onClose }) => {
                   <option value="103C">Phòng khám 103C</option>
                 </select>
                 {errors.room && <span className={styles.error}>{errors.room}</span>}
-                {/* <input
-                  type="text"
-                  name="reason"
-                  value={formData.room}
-                  onChange={handleInputChange}
-                  // disabled={isDisabled}
-                  disabled
-                  style={{ backgroundColor: '#e3f5ff' }}
-                />
-                {errors.reason && <span className={styles.error}>{errors.reason}</span>} */}
               </div>
+            </div> */}
+            <div className={styles.formFlex1}>
+            <div className={styles.formGroup}>
+                <label>
+                    Phòng khám <span style={{ color: "red" }}>*</span>
+                </label>
+                <select
+                    name="room"
+                    value={selectedRoomId}
+                    onChange={handlePKChange}
+                >
+                    <option value="">Chọn phòng khám</option>
+                    {phongKhams.map((phongKham) => (
+                        <option key={phongKham.phong_kham_id} value={phongKham.phong_kham_id}>
+                            {phongKham.ten}
+                        </option>
+                    ))}
+                </select>
+                {errors.room && (
+                    <span className={styles.error}>{errors.room}</span>
+                )}
             </div>
+        </div>
           </div>
         </form>
       </div>

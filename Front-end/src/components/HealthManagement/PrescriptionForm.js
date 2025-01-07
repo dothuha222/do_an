@@ -1,11 +1,14 @@
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../css/HealthManagement/PrescriptionForm.module.css'; // Import CSS styles
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
 import { FaHistory } from 'react-icons/fa';
-import DatePicker from 'react-datepicker'; // Import DatePicker
+import DatePicker from 'react-datepicker'; 
+import { useNavigate,useLocation, useParams } from "react-router-dom";
+import { createDonThuoc, getLichSuBA } from '../Services/BacSiService';
+
 import {
     TextField,
     Button,
@@ -16,47 +19,91 @@ import {
   } from "@mui/material";
 import { MdDelete, MdAdd } from "react-icons/md"
   
-const PrescriptionForm = () => {
+const PrescriptionForm = ({ten,userId}) => {
+    const {id} = useParams();
+    const location = useLocation();
+    const benhNhanId = location.state?.benhNhanId;
+    console.log(id);
+    console.log(benhNhanId);
     const [formData, setFormData] = useState({
-        weight: '',
-        height: '',
-        temperature: '',
-        breathingRate: '',
-        pulse: '',
-        bloodPressure: '',
-        reason: 'Đau mỏi vai gáy',
-        medicalHistory: '',
-        preliminaryDiagnosis: '',
-        generalExamination: '',
-        specificExamination: '',
-        service: '',
-        summary: 'Đau dạ dày',
-        loidan:''
+       ghi_chu:'',
+       ds_don_thuoc:[],
+       benh_an_id: id
     });
     const drugData = [
-        { name: "Panadol", donVi: "viên" },
-        { name: "Ibuprofen", donVi: "viên" },
-        { name: "Paracetamol", donVi: "viên" },
-        { name: "Amoxicillin", donVi: "viên" },
-        { name: "Cefixime", donVi: "gói" },
-        { name: "Metformin", donVi: "gói" },
-        { name: "Loratadine", donVi: "viên" },
-        { name: "Vitamin C", donVi: "gói" },
-        { name: "Omeprazole", donVi: "viên" },
-        { name: "Doxycycline", donVi: "viên" },
+        { 
+            thuoc_id:1,
+            don_vi: "viên",
+            gia:'5000',
+            ten: 'Paracetamol'
+          },
+          { 
+            thuoc_id:2,
+            don_vi: "lọ",
+            gia:'15000',
+            ten: 'NaCl 90%'
+          },
     ];
-    
-      const [medications, setMedications] = useState([
-        { id: 1, name: "", donVi: "", quantity: "", note: "" },
-      ]);
+
+    const [medications, setMedications] = useState([
+    { id: 1, ten: "", don_vi: "", so_luong: "", ghi_chu: "" },
+    ]);
+    const navigator = useNavigate();
+    const handleViewHistory = () => {
+        navigator(`/view-history-list/${patientData.benhNhanId}`);
+    };
+
+    const [patientData, setPatientData] = useState({})
+    useEffect(() => {
+           const fetchData = async () => {
+           try {
+               const response = await getLichSuBA(benhNhanId);
+               const data = response.data;
+               console.log(data);       
+   
+               const matchedData = data.find(item => item.benh_an_id === parseInt(id));
+               console.log(matchedData);
+               if (matchedData) {
+               const formattedData = {
+                   id: `BN${String(matchedData.don_tiep_nhan.benh_nhan.nguoi_dung_id).padStart(4, '0')}`,
+                   name: matchedData.don_tiep_nhan.benh_nhan.ten,
+                   dob: matchedData.don_tiep_nhan.benh_nhan.ns,
+                   gender: matchedData.don_tiep_nhan.benh_nhan.gioi_tinh,
+                   address: matchedData.don_tiep_nhan.benh_nhan.dia_chi,
+                   room: matchedData.don_tiep_nhan.phong_kham.ten,
+                   doctor: ten,
+                   reason: matchedData.don_tiep_nhan.ly_do_kham,
+                //    ngayKham:formatDate(matchedData.don_tiep_nhan.thoiGian),
+                ngayKham:matchedData.don_tiep_nhan.thoiGian,
+        
+                   ket_luan:matchedData.ket_luan,
+                
+               };
+   
+               console.log(formattedData)
+               setPatientData(formattedData);
+               }
+           } catch (error) {
+               console.error("Error fetching data:", error);
+           }
+           };
+           fetchData();
+       }, [id, ten]);
+   
+       useEffect(() => {
+           if (patientData) {
+           console.log(patientData);
+           }
+       }, [patientData]);
+
        // Thêm khối mới
-  const addMedication = () => {
+    const addMedication = () => {
     const newMedication = {
       id: medications.length + 1,
-      name: "",
-      donVi: "",
-      quantity: "",
-      note: "",
+      ten: "",
+      don_vi: "",
+      so_luong: "",
+      ghi_chu: "",
     };
     setMedications([...medications, newMedication]);
   };
@@ -72,31 +119,16 @@ const PrescriptionForm = () => {
     setMedications(updatedMedications);
   };
 
-  // Handle thay đổi thông tin
-//   const handleMedicationChange = (id, field, value) => {
-//     const updatedMedications = medications.map((med) => {
-//       if (med.id === id) {
-//         const drug = drugData.find((d) => d.name === value);
-//         return {
-//           ...med,
-//           [field]: value,
-//           donVi: drug ? drug.donVi : "",
-//         };
-//       }
-//       return med;
-//     });
-//     setMedications(updatedMedications);
-//   };
 
 const handleMedicationChange = (id, field, value) => {
     const updatedMedications = medications.map((med) => {
       if (med.id === id) {
         const updatedMed = { ...med, [field]: value };
   
-        // Chỉ cập nhật 'donVi' khi trường 'name' thay đổi
-        if (field === "name") {
+        // Chỉ cập nhật 'donVi' khi trường 'ten' thay đổi
+        if (field === "ten") {
           const drug = drugData.find((d) => d.name === value);
-          updatedMed.donVi = drug ? drug.donVi : "";
+          updatedMed.don_vi = drug ? drug.don_vi : "";
         }
   
         return updatedMed;
@@ -105,41 +137,16 @@ const handleMedicationChange = (id, field, value) => {
     });
     setMedications(updatedMedications);
   };
+
+  console.log(medications)
   
 
     const [endTime, setEndTime] = useState(null);
     const [startTime] = useState(new Date());
     const [errors, setErrors] = useState({});
-    const [selectedDate, setSelectedDate] = useState(null); // State lưu giữ ngày đã chọn
+    const [selectedDate, setSelectedDate] = useState(null); 
 
-    const patientData = [
-        {id: 'BN2098',
-            name: 'Nguyễn Văn Minh',
-            dob: '08/11/1970',
-            cccd: '034300112686',
-            gender: 'Nam',
-            address: 'Duy Tân, Cầu Giấy',
-            reason: 'Đau dạ dày',
-            room: '102B',
-            phoneNumber: '0988176563', 
-            bhytCode: 'DN47888025341',
-            receptionTime: '25/12/2024',
-            receptionCode: 'RN310'}
-    ];
-    const clinicData = [
-        { id: 'BN001', department: '102B', doctorName: 'Phạm Minh Phương'}
-    ];
-
-    const validateForm = () => {
-        const newErrors = {};
-        if (!formData.weight) newErrors.weight = 'Cân nặng là bắt buộc';
-        if (!formData.height) newErrors.height = 'Chiều cao là bắt buộc';
-        if (!formData.temperature) newErrors.temperature = 'Nhiệt độ là bắt buộc';
-        if (!formData.breathingRate) newErrors.breathingRate = 'Nhịp thở là bắt buộc';
-        if (!formData.pulse) newErrors.pulse = 'Mạch là bắt buộc';
-        if (!formData.bloodPressure) newErrors.bloodPressure = 'Huyết áp là bắt buộc';
-        return newErrors;
-    };
+   
     const formatDate = (date) => {
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
@@ -155,36 +162,36 @@ const handleMedicationChange = (id, field, value) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSaveAndPrint = () => {
-        const newErrors = validateForm();
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-        } else {
-            const end = new Date();
-            setEndTime(end);
-            // Show modal for confirmation
-            if (window.confirm("Xác nhận lưu và in phiếu?")) {
-                alert(`Lưu thành công!\nThời gian bắt đầu:  ${formatDate(startTime)}\nThời gian kết thúc: ${formatDate(end)}`);;
-            }
+    const handleSaveAndPrint = async () => {
+        try {
+            const ds_thuoc = medications.map(item => ({
+                thuoc_id: item.id,
+                so_luong: item.so_luong
+            }));
+            console.log("Danh sách thuoc", ds_thuoc);
+        
+            const payload = {
+                ...formData,
+                ds_don_thuoc:ds_thuoc
+            };
+            console.log("Payload gửi lên:", payload);
+        
+            const baResponse = await createDonThuoc(payload);
+            alert('Tạo đơn thuốc thành công!');
+            console.log("Response đơn thuốc:", baResponse.data);
+            
+        } catch (error) {
+            console.error("Đã xảy ra lỗi:", error);
+            alert(`Có lỗi xảy ra: ${error.message}`);
         }
     };
 
     const handleCancel = () => {
         if (window.confirm("Xác nhận hủy đơn khám bệnh?")) {
             setFormData({
-                weight: '',
-                height: '',
-                temperature: '',
-                breathingRate: '',
-                pulse: '',
-                bloodPressure: '',
-                reason: '',
-                medicalHistory: '',
-                preliminaryDiagnosis: '',
-                generalExamination: '',
-                specificExamination: '',
-                service: '',
-                summary: 'Đau dạ dày',
+                ghi_chu:'',
+                ds_don_thuoc:[],
+                benh_an_id: id
             });
         }
     };
@@ -197,19 +204,19 @@ const handleMedicationChange = (id, field, value) => {
                     <h3 className={styles.formSectionTitle}>Thông tin bệnh nhân</h3>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Mã BN:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].id} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.id} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Họ và tên:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].name} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.name} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Ngày sinh:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].dob} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.dob} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Giới tính:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].gender} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.gender} readOnly />
                     </div>
                 </div>
 
@@ -217,23 +224,23 @@ const handleMedicationChange = (id, field, value) => {
                     <div className={styles.formSection} style={{ fontSize: '14px', width: '100%' , padding: '10px 20px', backgroundColor:'#588ad726'}}>
                         <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                             <label className={styles.formLabel}>Phòng khám:</label>
-                            <input className={styles.formInput} type="text" value={clinicData[0].department} readOnly />
+                            <input className={styles.formInput} type="text" value={patientData.room} readOnly />
                         </div>
                         <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                             <label className={styles.formLabel}>Bác sĩ thực hiện:</label>
-                            <input className={styles.formInput} type="text" value={clinicData[0].doctorName} readOnly />
+                            <input className={styles.formInput} type="text" value={patientData.doctor} readOnly />
                         </div>
                         <div className={styles.formGroup} style={{ marginBottom: "8px", alignItems:"stretch" }}>
                             <label className={styles.formLabel}>Thời gian bắt đầu khám:</label>
                             <p className={styles.formSectionP}> {formatDate(startTime)}</p>
-                            {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>}
+                            {/* {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>} */}
                         </div>
                     </div>
                     <div className={styles.buttons}>
                         <button className={styles.savePrint} onClick={handleSaveAndPrint}>
                             <FaPrint style={{ marginRight: '8px' }} /> <span>LƯU VÀ IN PHIẾU</span>
                         </button>
-                        <button className={styles.viewHistory} onClick={handleSaveAndPrint}>
+                        <button className={styles.viewHistory} onClick={handleViewHistory}>
                             <FaHistory style={{ marginRight: '8px' }} /> <span>XEM LỊCH SỬ</span>
                         </button>
                         <button className={styles.cancel} onClick={handleCancel}>
@@ -250,9 +257,9 @@ const handleMedicationChange = (id, field, value) => {
                         <label>Chuẩn đoán </label>
                         <input
                             type="text"
-                            name="reason"
+                            name="ket_luan"
                             disabled
-                            value={formData.summary}
+                            value={patientData.ket_luan}
                             style={{ backgroundColor:"#E3F5FF"}}
                         />
                     </div>
@@ -292,10 +299,10 @@ const handleMedicationChange = (id, field, value) => {
                         <Grid item xs={4}>
                             <Autocomplete
                             options={drugData}
-                            getOptionLabel={(option) => option.name}
-                            value={drugData.find((d) => d.name === medication.name) || null}
+                            getOptionLabel={(option) => option.ten}
+                            value={drugData.find((d) => d.ten === medication.ten) || null}
                             onChange={(e, newValue) =>
-                                handleMedicationChange(medication.id, "name", newValue?.name || "")
+                                handleMedicationChange(medication.id, "ten", newValue?.ten || "")
                             }
                             renderInput={(params) => (
                                 <TextField
@@ -337,7 +344,7 @@ const handleMedicationChange = (id, field, value) => {
                         {/* Đơn vị */}
                         <Grid item xs={1}>
                             <TextField
-                            value={medication.donVi}
+                            value={medication.don_vi}
                             disabled
                             fullWidth
                             placeholder="Đơn vị"
@@ -398,8 +405,8 @@ const handleMedicationChange = (id, field, value) => {
                 <div className={styles.formGroup} style={{ marginTop: "30px", width: '66%' }}>
                     <label>Lời dặn của bác sĩ</label>
                     <textarea
-                        name="loidan"
-                        value={formData.loidan}
+                        name="ghi_chu"
+                        value={formData.ghi_chu}
                         onChange={handleInputChange}
                     />
                 </div>

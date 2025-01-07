@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icon
-import styles from '../../css/Header/ChangePassword.module.css'; // Import module CSS
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import styles from '../../css/Header/ChangePassword.module.css'; 
+import { changePassword } from '../Services/NguoiDungService';
 
-const ChangePassword = () => {
+const ChangePassword = ({userId}) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -37,18 +38,28 @@ const ChangePassword = () => {
     }));
   };
 
-  // Hàm xử lý lưu mật khẩu mới
+  console.log(userId)
+
   const handleSave = () => {
     const { currentPassword, newPassword, confirmNewPassword } = formData;
-
-    // Kiểm tra tính hợp lệ của mật khẩu
-    if (newPassword === confirmNewPassword && currentPassword && newPassword.length >= 6) {
-      // Gọi API hoặc logic lưu mật khẩu vào CSDL ở đây
-      setShowSuccessModal(true);
-    } else {
-      setIsError(true);
-    }
-  };
+    console.log(formData)
+    
+    // if (newPassword === confirmNewPassword && currentPassword && newPassword.length >= 6) {    
+      if (newPassword === confirmNewPassword) {
+        changePassword(userId, {'new-password': newPassword})
+          .then(response => {
+            console.log(response.data);
+            setShowSuccessModal(true);
+          })
+          .catch(error => {
+            console.error(error);
+            setIsError(true);
+          });
+      }
+      else{
+        setIsError(true)
+      }
+  }
 
   // Hàm xử lý hủy thay đổi và quay lại trang trước đó
   const handleCancel = () => {

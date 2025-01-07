@@ -7,10 +7,9 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaTimes } from 'react-icons/fa';
-import { createReception, getReception,updateReception } from '../Services/ReceptionService';
 import { useParams } from 'react-router-dom';
 
-const DichVuForm = ({ mode, receptionData, onClose }) => {
+const DichVuForm = () => {
   const [formData, setFormData] = useState({
     dichVuName: '',
     type: '',
@@ -23,11 +22,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
   const [errors, setErrors] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // useEffect(() => {
-  //   if (receptionData) {
-  //     setFormData(receptionData);
-  //   }
-  // }, [receptionData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,37 +42,7 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
       setErrors(validationErrors);
       return;
     }
-    else{
-      // setErrors({})
-      e.preventDefault();
-      if(id){
-        updateReception(id, formData).then((response) => {
-          console.log(response.data)
-          navigator('/patient-list')
-        })
-        .catch(error => {
-          console.error(error)
-        })
-        console.log('da sua')
-      }
-      else{
-        createReception(formData).then((response) => {
-          console.log(response.data)
-          navigator('/patient-list')
-          setFormData
-            ({
-
-                dichVuName: '',
-                type: '',
-                price: '',
-            });
-        })
-        .catch(error => {
-          console.error(error)
-        })
-        console.log("da luu")
-      }
-    }
+  
   };
 
   const handleCancel = () => {
@@ -95,16 +59,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
     setShowConfirmModal(false);
   };
 
-  const isDisabled = mode === 'view';
-  useEffect(() => {
-    if(id){
-      getReception(id).then((res) => {
-        setFormData(res.data)
-      }).catch((err) => {
-        console.error(err);
-      })
-    }
-  },[id])
 
   return (
     <div className={styles.receptionForm}>
@@ -120,7 +74,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
                   name="dichVuName"
                   value={formData.dichVuName}
                   onChange={handleInputChange}
-                  disabled={isDisabled}
                 />
                 {errors.dichVuName && <span className={styles.error}>{errors.dichVuName}</span>}
               </div>
@@ -132,7 +85,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
                   name="type"
                   value={formData.type}
                   onChange={handleInputChange}
-                  disabled={isDisabled}
                 />
                 {errors.type && <span className={styles.error}>{errors.type}</span>}
               </div>
@@ -145,7 +97,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  disabled={isDisabled}
                 />
                 {errors.price && <span className={styles.error}>{errors.price}</span>}
               </div>
@@ -154,7 +105,7 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
           </div>
         </form>
       </div>
-      {!isDisabled && (
+      
         <div className={styles.buttons}>
           <button onClick={handleSaveAndPrint} className={`${styles.btn} ${styles.savePrint}`}>
             <span style={{ padding: '0px 14px' }}>LƯU</span>
@@ -163,7 +114,6 @@ const DichVuForm = ({ mode, receptionData, onClose }) => {
             <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
           </button>
         </div>
-      )}
       {/* Modal Confirm */}
       <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
         <Modal.Header closeButton>

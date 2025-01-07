@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import styles from '../../css/ReceptionManage/InvoiceForm.module.css'; // Import CSS styles
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { capNhatHD } from '../Services/LeTanService';
+import { useNavigate, useParams } from 'react-router-dom';
 // import DatePicker from 'react-datepicker'; // Import DatePicker
 // import {
 //     TextField,
@@ -16,10 +18,12 @@ import { FaTimes } from 'react-icons/fa';
 // import { MdDelete, MdAdd } from "react-icons/md"
   
 const InvoiceForm = () => {
+    const navigator = useNavigate()
+    const {id} = useParams();
     const invoiceData = {
-        patientId: 'BN001',
-        patientName: 'Nguyễn Văn A',
-        visitDate: '2024-12-10',
+        patientId: 'BN0005',
+        patientName: 'Hoàng Văn Đạt',
+        visitDate: '07/02/1998',
         hasBHYT: true,
         items: [
           {
@@ -101,10 +105,10 @@ const InvoiceForm = () => {
     const [startTime] = useState(new Date());
     
     const patientData = [
-        { id: 'BN001', name: 'Nguyễn Quỳnh Lan', dob: '02/09/1990', gender: 'Nữ' }
+        { id: 'BN0005', name: 'Hoàng Văn Đạt', dob: '07/02/1998', gender: 'Nam' }
     ];
     const letanData = [
-        { id: 'BN001', name: 'Đỗ Thu Hà', dob: '02/09/1990', gender: 'Nữ' }
+        { id: 'BN001', name: 'Phạm Thị Dung', dob: '02/09/1990', gender: 'Nữ' }
     ];
 
     const trangthaiHoaDon = [
@@ -121,13 +125,22 @@ const InvoiceForm = () => {
     };
 
 
-    const handleSaveAndPrint = () => {
-        const end = new Date();
-        setEndTime(end);
-        // Show modal for confirmation
-        if (window.confirm("Xác nhận lưu và in phiếu?")) {
-            alert(`Lưu thành công!\nThời gian bắt đầu:  ${formatDate(startTime)}\nThời gian thanh toán: ${formatDate(end)}`);;
-        }
+    const handleSaveAndPrint =async () => {
+        try {
+            // Gọi API cập nhật hóa đơn
+            const response = await capNhatHD(id,2);
+            alert("Hóa đơn đã được cập nhật thành công:")
+            navigator("/invoice-list")
+          } catch (error) {
+            // Xử lý lỗi
+            console.error("Lỗi khi cập nhật hóa đơn:", error);
+          }
+        // const end = new Date();
+        // setEndTime(end);
+        // // Show modal for confirmation
+        // if (window.confirm("Xác nhận lưu và in phiếu?")) {
+        //     alert(`Lưu thành công!\nThời gian bắt đầu:  ${formatDate(startTime)}\nThời gian thanh toán: ${formatDate(end)}`);;
+        // }
     };
 
     const handleCancel = () => {
@@ -184,7 +197,7 @@ const InvoiceForm = () => {
                         
                             <div className={styles.formGroup} style={{ marginBottom: "8px", alignItems:"stretch" , width: '100%' }}>
                                 <label className={styles.formLabel}>Thời gian bắt đầu khám:</label>
-                                <p className={styles.formSectionP}> {formatDate(startTime)}</p>
+                                <p className={styles.formSectionP}>05/01/2025</p>
                                 {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>}
                             </div>
                         </div>
@@ -195,8 +208,8 @@ const InvoiceForm = () => {
                             </div>
                         
                             <div className={styles.formGroup} style={{ marginBottom: "8px", width: '100%', alignItems:"stretch" }}>
-                                <label className={styles.formLabel}>Thời gian thanh toán:</label>
-                                <p className={styles.formSectionP}> {formatDate(startTime)}</p>
+                                {/* <label className={styles.formLabel}>Thời gian thanh toán:</label> */}
+                                {/* <p className={styles.formSectionP}> {formatDate(startTime)}</p> */}
                                 {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>}
                             </div>
                         </div>

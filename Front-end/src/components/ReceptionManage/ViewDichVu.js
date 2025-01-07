@@ -7,15 +7,13 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaTimes } from 'react-icons/fa';
-// import { createReception, getReception,updateReception } from '../Services/ReceptionService';
 import { useParams } from 'react-router-dom';
-import { addThuoc } from '../Services/LeTanService';
 
-const DrugForm = () => {
+const ViewDichVu = () => {
   const [formData, setFormData] = useState({
-    ten: '',
-    don_vi: '',
-    gia: '',
+    dichVuName: '',
+    type: '',
+    price: '',
   });
 
   const {id} = useParams();
@@ -25,25 +23,26 @@ const DrugForm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
 
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, birthDate: date });
+  };
 
-  const handleSaveAndPrint = () => {
-    const payload = formData
-        console.log(payload);
-        addThuoc(payload)
-        .then((response) => {
-          console.log(response.data);
-          navigator('/drug-list')
-        })
-        .catch((error) => {
-          console.error("Lỗi khi cập nhật thuốc:", error);
-        });
+  const handleSaveAndPrint = (e) => {
+    let validationErrors = {};
+    if (!formData.dichVuName) validationErrors.fullName = 'Tên thuốc là bắt buộc';
+    if (!formData.type) validationErrors.birthDate = 'Đơn vị là bắt buộc';
+    if (!formData.price) validationErrors.cccd = 'Giá tiền là bắt buộc';
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+  
   };
 
   const handleCancel = () => {
@@ -53,71 +52,76 @@ const DrugForm = () => {
   const handleConfirmCancel = () => {
     setFormData
     ({
-        ten: '',
-        don_vi: '',
-        gia: '',
+        dichVuName: '',
+        type: '',
+        price: '',
     });
     setShowConfirmModal(false);
-    navigator('/drug-list')
   };
 
 
   return (
     <div className={styles.receptionForm}>
-    
       <div className={styles.formSection} style={{ marginTop: '42px' }}>
         <form>
-          <h3 className={styles.formSectionTitle}>Thông tin thuốc</h3>
+          <h3 className={styles.formSectionTitle}>Thông tin dịch vụ</h3>
           <div className={styles.formFlex}>
             <div className={styles.formFlex1}>
               <div className={styles.formGroup}>
-                <label>Tên thuốc <span style={{ color: 'red' }}>*</span></label>
+                <label>Tên dịch vụ</label>
                 <input
                   type="text"
-                  name="ten"
-                  value={formData.ten}
+                  name="dichVuName"
+                  value={formData.dichVuName}
                   onChange={handleInputChange}
+                  disabled
+                  style={{ backgroundColor: '#e3f5ff' }}
                 />
-                {errors.drugName && <span className={styles.error}>{errors.drugName}</span>}
+                {errors.dichVuName && <span className={styles.error}>{errors.dichVuName}</span>}
               </div>
               
               <div className={styles.formGroup}>
-                <label>Đơn vị<span style={{ color: 'red' }}>*</span></label>
+                <label>Loại dịch vụ</label>
                 <input
                   type="text"
-                  name="don_vi"
-                  value={formData.don_vi}
+                  name="type"
+                  value={formData.type}
                   onChange={handleInputChange}
+                  disabled
+                  style={{ backgroundColor: '#e3f5ff' }}
                 />
-                {errors.unit && <span className={styles.error}>{errors.unit}</span>}
+                {errors.type && <span className={styles.error}>{errors.type}</span>}
               </div>
             </div>
             <div className={styles.formFlex1}>
               <div className={styles.formGroup}>
-                <label>Giá tiền<span style={{ color: 'red' }}>*</span></label>
+                <label>Giá tiền</label>
                 <input
                   type="text"
-                  name="gia"
-                  value={formData.gia}
+                  name="price"
+                  value={formData.price}
                   onChange={handleInputChange}
+                  disabled
+                  style={{ backgroundColor: '#e3f5ff' }}
                 />
                 {errors.price && <span className={styles.error}>{errors.price}</span>}
               </div>
+              
             </div>
           </div>
         </form>
       </div>
-        <div className={styles.buttons}>
+      
+        {/* <div className={styles.buttons}>
           <button onClick={handleSaveAndPrint} className={`${styles.btn} ${styles.savePrint}`}>
             <span style={{ padding: '0px 14px' }}>LƯU</span>
           </button>
           <button onClick={handleCancel} className={`${styles.btn} ${styles.cancel}`}>
             <FaTimes style={{ marginRight: '8px' }} /> <span>HỦY</span>
           </button>
-        </div>
-      {/* )} */}
+        </div> */}
       {/* Modal Confirm */}
-      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+      {/* <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Xác nhận</Modal.Title>
         </Modal.Header>
@@ -132,9 +136,9 @@ const DrugForm = () => {
             Đồng ý
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
 
-export default DrugForm;
+export default ViewDichVu;

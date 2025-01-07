@@ -7,30 +7,66 @@ import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { getLichSuBA } from '../Services/BacSiService';
+import { createDontiepnhan } from '../Services/LeTanService';
+import { useNavigate } from 'react-router-dom';
 
-const  ScheduleForm = ({ mode, receptionData, onClose }) => {
+
+const  ScheduleForm = ({ userId}) => {
   const [formData, setFormData] = useState({
-    appointDay:'',
-    patientId: 'BN2098',
-    fullName: 'Nguyễn Văn Anh',
-    birthDate: '08/12/1980',
-    cccd: '034300988712',
-    gender: 'Nam',
-    address: 'Vạn Phúc, Hà Đông',
-    reason: '',
-    // room: '',
-    phoneNumber: '0988176563', // Giá trị 'Có' hoặc 'Không'
-    bhytCode: 'DN47888025341',
+    ly_do_kham:"",
+    thoiGian:"",
+    benh_nhan_id: userId,
+    trang_thai_don_id: 1
   });
+  const navigator = useNavigate();
 
   const [errors, setErrors] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+  const [patientData, setPatientData] = useState(null)
   useEffect(() => {
-    if (receptionData) {
-      setFormData(receptionData);
-    }
-  }, [receptionData]);
+        const fetchData = async () => {
+        try {
+            const response = await getLichSuBA(userId);
+            const data = response.data;
+            console.log(data);       
+
+            const matchedData = data[0]
+            console.log(matchedData);
+            if (matchedData) {
+            const formattedData = {
+                id: `BN${String(matchedData.don_tiep_nhan.benh_nhan.nguoi_dung_id).padStart(4, '0')}`,
+                name: matchedData.don_tiep_nhan.benh_nhan.ten,
+                dob: matchedData.don_tiep_nhan.benh_nhan.ns,
+                cccd: matchedData.don_tiep_nhan.benh_nhan.cccd,
+                gender: matchedData.don_tiep_nhan.benh_nhan.gioi_tinh,
+                address: matchedData.don_tiep_nhan.benh_nhan.dia_chi,
+                phoneNumber: matchedData.don_tiep_nhan.benh_nhan.sdt,
+                maBHYT: matchedData.don_tiep_nhan.benh_nhan.ma_bhyt,
+                benhNhanId : matchedData.don_tiep_nhan.benh_nhan.nguoi_dung_id,
+            };
+
+            console.log(formattedData)
+            setPatientData(formattedData);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+        };
+        fetchData();
+    }, [userId]);
+
+    useEffect(() => {
+        if (patientData) {
+        console.log(patientData);
+        }
+    }, [patientData]);
+  // useEffect(() => {
+  //   if (receptionData) {
+  //     setFormData(receptionData);
+  //   }
+  // }, [receptionData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,23 +82,39 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
   // };
 
   const handleAppointChange = (date) => {
-    setFormData({ ...formData, appointDay:date});
+    setFormData({ ...formData, thoiGian:date});
   };
   const handleDateChange = (date) => {
     setFormData({ ...formData, birthDate: date });
   };
 
-  const handleSaveAndPrint = () => {
-    let validationErrors = {};
-    if (!formData.appointDay) validationErrors.appointDay = 'Ngày hẹn khám là bắt buộc';
-    if (!formData.reason) validationErrors.reason = 'Lý do khám là bắt buộc';
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+  const handleSaveAndPrint = (e) => {
+    // let validationErrors = {};
+    // if (!formData.thoiGian) validationErrors.thoiGian = 'Ngày hẹn khám là bắt buộc';
+    // if (!formData.reason) validationErrors.reason = 'Lý do khám là bắt buộc';
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
+    e.preventDefault();
+    const payload ={
+      ...formData,
+      benh_nhan_id: patientData.benhNhanId
     }
-    // Gửi dữ liệu đã sửa lên server
-    console.log('Lưu dữ liệu:', formData);
-    onClose();
+    alert('Đẩy dữ liệu')
+    console.log('Đẩy dữ liệu:', payload);
+    createDontiepnhan(payload).then(response => {
+      alert('Gui thanh cong!')
+      console.log(response.data)
+      navigator('/schedule-list')
+      setFormData
+            ({
+              ly_do_kham:"",
+              thoiGian:"",
+              benh_nhan_id: userId,
+              trang_thai_don_id: 1
+            });
+    })
   };
 
   const handleCancel = () => {
@@ -70,12 +122,14 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
   };
 
   const handleConfirmCancel = () => {
-    onClose();
+    // onClose();
     setShowConfirmModal(false);
   };
 
   // const isDisabled = mode === 'view';
-
+  if (!patientData) {
+    return <div>Dữ liệu không tồn tại</div>;
+  }
   return (
     <div className={styles.receptionForm}>
       <div className={styles.formSection}>
@@ -87,8 +141,8 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <label>Mã bệnh nhân</label>
                 <input
                   type="text"
-                  name="patientId"
-                  value={formData.patientId}
+                  name="id"
+                  value={patientData.id}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 />
@@ -97,9 +151,8 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <label>Họ và tên </label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
+                  name="name"
+                  value={patientData.name}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 />
@@ -107,8 +160,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
               <div className={styles.formGroup}>
                 <label>Ngày sinh </label>
                 <DatePicker
-                  // selected={formData.birthDate}
-                  value={formData.birthDate}
+                  value={patientData.dob}
                   dateFormat="dd/MM/yyyy"
                   className={styles.datePicker}
                   placeholderText="Chọn ngày sinh"
@@ -121,8 +173,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <input
                   type="text"
                   name="cccd"
-                  value={formData.cccd}
-                  onChange={handleInputChange}
+                  value={patientData.cccd}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 />
@@ -130,13 +181,13 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
               <div className={styles.formGroup}>
                 <label>Ngày hẹn khám <span style={{ color: 'red' }}>*</span></label>
                 <DatePicker
-                    selected={formData.appointDay}
+                    selected={formData.thoiGian}
                     onChange={handleAppointChange}
                     dateFormat="dd/MM/yyyy"
                     className={styles.datePickerB}
                     placeholderText="Chọn ngày hẹn khám"
                 />
-                {errors.appointDay && <span className={styles.error}>{errors.appointDay}</span>}
+                {errors.thoiGian && <span className={styles.error}>{errors.thoiGian}</span>}
               </div>
             </div>
             <div className={styles.formFlex1}>
@@ -144,8 +195,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <label>Giới tính </label>
                 <input
                   name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
+                  value={patientData.gender}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 >
@@ -156,8 +206,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <input
                   type="text"
                   name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
+                  value={patientData.address}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 />
@@ -167,8 +216,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <input
                   type="text"
                   name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
+                  value={patientData.phoneNumber}
                   disabled
                   style={{ backgroundColor: '#e3f5ff' }}
                 />
@@ -178,8 +226,7 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <input
                   type="text"
                   name="bhytCode"
-                  value={formData.bhytCode}
-                  onChange={handleInputChange}
+                  value={patientData.maBHYT}
                   disabled
                   placeholder="Nhập mã số BHYT"
                   style={{ backgroundColor: '#e3f5ff' }}
@@ -189,8 +236,8 @@ const  ScheduleForm = ({ mode, receptionData, onClose }) => {
                 <label>Lý do khám <span style={{ color: 'red' }}>*</span> </label>
                 <input
                   type="text"
-                  name="reason"
-                  value={formData.reason}
+                  name="ly_do_kham"
+                  value={formData.ly_do_kham}
                   onChange={handleInputChange}
                   // disabled={isDisabled}
                 />

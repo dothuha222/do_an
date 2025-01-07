@@ -1,12 +1,15 @@
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../css/HealthManagement/HealthForm.module.css'; // Import CSS styles
 import { FaPrint } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
 import { FaHistory } from 'react-icons/fa';
 import { MdDelete, MdAdd } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getAllDon,getAllDV,getDVById,createBA,createChiSo } from '../Services/BacSiService';
+
 import {
     TextField,
     Button,
@@ -19,84 +22,153 @@ import {
     FormControl
   } from "@mui/material";
 
-const HealthForm = () => {
+const HealthForm = ({ten,userId}) => {
+    const [donTNId, setDonTNId] = useState(null)
+    const [patientData, setPatientData] = useState(null)
+    const [startTime] = useState(new Date());
+
+    console.log(ten)
+    const {id} = useParams();
     const [formData, setFormData] = useState({
-        weight: '',
-        height: '',
-        temperature: '',
-        breathingRate: '',
-        pulse: '',
-        bloodPressure: '',
-        spo2:'',
-        reason: 'Đau dạ dày',
-        medicalHistory: '',
-        preliminaryDiagnosis: '',
-        generalExamination: '',
-        specificExamination: '',
-        // services: '',
-        summary: '',
+        tienSuBenh:'',
+        khamTT:'',
+        khamBP:'',
+        chuanDoan:'',
+        ket_luan:'',
+        thoi_gian: startTime,
+        nguoi_dung_id:'',
+        don_tiep_nhan_id: '',
+        ds_dich_vu_ids:[]
     });
 
-    const [errors, setErrors] = useState({});
-    const [startTime] = useState(new Date());
-    const [endTime, setEndTime] = useState(null);
+    console.log(userId)
+    console.log(donTNId)
 
-    const patientData = [
-        {id: 'BN2098',
-            name: 'Nguyễn Văn Minh',
-            dob: '08/11/1970',
-            cccd: '034300112686',
-            gender: 'Nam',
-            address: 'Duy Tân, Cầu Giấy',
-            reason: 'Đau dạ dày',
-            room: '102B',
-            phoneNumber: '0988176563', 
-            bhytCode: 'DN47888025341',
-            receptionTime: '25/12/2024',
-            receptionCode: 'RN310'}
-    ];
-    const clinicData = [
-        { id: 'BN001', department: '102B', doctorName: 'Phạm Minh Phương'}
-    ];
+    const [chisoSK, setChiSo] = useState({
+        can_nang:'',
+        chieu_cao:'',
+        nhiet_do:'',
+        nhip_tho:'',
+        mach:'',
+        huyet_ap:'',
+        benh_an_id: ''
+    })
+    // const [errors, setErrors] = useState({});
+    // const [endTime, setEndTime] = useState(null);
+    const [a,setA] = useState(null);
 
-    const serviceData = [
-        {name: 'Khám tai - mũi - họng'},
-        {name: 'Khám da liễu'},
-        {name: 'Khám sản phụ khoa'},
-        {name: 'Khám nội khoa'},
-        {name: 'Khám sức khỏe tổng quát'},
-        {name: 'Khám sức khỏe định kỳ'},
-        {name: 'Xét nghiệm nước tiểu'},
-        {name: 'Xét nghiệm máu tổng quát'},
-        {name: 'Xét nghiệm sinh hóa'},
-        {name: 'Siêu âm ổ bụng'},
-        {name: 'Chụp X-quang phổi'},
-        {name: 'Chụp CT-Scan'},
-        {name: 'Chụp MRI'},
-        {name: 'Nội soi dạ dày'},
-        {name: 'Tiêm phòng cúm'},
-        {name: 'Tiêm phòng HPV'},
-        {name: 'Tư vấn dinh dưỡng'},
-    ]
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            const response = await getAllDon();
+            const data = response.data;
+            console.log(data);       
 
-    const typeService = [
-        { name: "Cơ bản" },
-        { name: "Cao cấp" }
-    ]
+            const matchedData = data.find(item => item.don_tiep_nhan_id === parseInt(id));
+            console.log(matchedData);
+            setA(matchedData)
+            if (matchedData) {
+            const formattedData = {
+                id: `BN${String(matchedData.benh_nhan.nguoi_dung_id).padStart(4, '0')}`,
+                name: matchedData.benh_nhan.ten,
+                // dob: formatDate(matchedData.benh_nhan.ns),
+                dob: matchedData.benh_nhan.ns,
+                gender: matchedData.benh_nhan.gioi_tinh,
+                address: matchedData.benh_nhan.dia_chi,
+                room: matchedData.phong_kham.ten,
+                doctor: ten,
+                reason: matchedData.ly_do_kham,
+                benhNhanId:matchedData.benh_nhan.nguoi_dung_id,
+                don_tiep_nhan_id: matchedData.don_tiep_nhan_id
+            };
+
+            console.log(formattedData)
+            setPatientData(formattedData);
+            setDonTNId(formattedData.don_tiep_nhan_id)
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+        };
+        fetchData();
+    }, [id, ten, userId]);
+
+    useEffect(() => {
+        if (patientData) {
+        console.log(patientData);
+        }
+    }, [patientData]);
+
+
+    const [typeService, setTypeService] = useState([]);
+    const [serviceData, setServiceData] = useState([]);
+    const [services, setServices] = useState([{ id: 1, name: "", type: "" }]);
+
+    useEffect(() => {
+        getAllDV()
+          .then((response) => {
+            console.log(response.data);
+            const typeData = response.data; 
+            console.log(typeData);
+            setTypeService(typeData);
+          })
+          .catch((error) => console.error("Error fetching type services:", error));
+      }, []);
+        const handleTypeChange = (serviceId, value) => {
+            setServices((prevServices) =>
+                prevServices.map((service) =>
+                    service.id === serviceId ? { ...service, type: value, dich_vu_id: "" } : service // Đặt lại giá trị dịch vụ đã chọn khi loại dịch vụ thay đổi
+                )
+            );
+            const selectedType = typeService.find((type) => type.loai_dich_vu_id === value);
+            if (selectedType) {
+                getDVById(selectedType.loai_dich_vu_id)
+                    .then((response) => {
+                        setServiceData((prevData) => ({
+                            ...prevData,
+                            [serviceId]: response.data, // Lưu trữ dịch vụ theo từng ô
+                        }));
+                    })
+                    .catch((error) => console.error("Error fetching services:", error));
+            };
+          }
+        const handleServiceChange = (serviceId, field, value) => {
+        setServices((prevServices) =>
+            prevServices.map((service) =>
+                service.id === serviceId ? { ...service, [field]: value } : service
+            )
+        );
+        }         
+    console.log(services)
+    const addService = () => {
+        setServices((prevServices) => [
+            ...prevServices,
+            { id: prevServices.length + 1, name: "", type: "" },
+        ]);
+    };
+      const removeServices = (id) => {
+        const updateServices = services
+          .filter((med) => med.id !== id)
+          .map((med, index) => ({
+            ...med,
+            id: index + 1, 
+          }));
+        setServices(updateServices);
+      };   
     const navigator = useNavigate();
     const handleViewHistory = () => {
-        navigator('/view-history');
+        navigator(`/view-history-list/${patientData.benhNhanId}`);
       };
-    const validateForm = () => {
-        const newErrors = {};
-        if (!formData.weight) newErrors.weight = 'Cân nặng là bắt buộc';
-        if (!formData.height) newErrors.height = 'Chiều cao là bắt buộc';
-        if (!formData.temperature) newErrors.temperature = 'Nhiệt độ là bắt buộc';
-        if (!formData.breathingRate) newErrors.breathingRate = 'Nhịp thở là bắt buộc';
-        if (!formData.pulse) newErrors.pulse = 'Mạch là bắt buộc';
-        if (!formData.bloodPressure) newErrors.bloodPressure = 'Huyết áp là bắt buộc';
-        return newErrors;
-    };
+    // const validateForm = () => {
+    //     const newErrors = {};
+    //     if (!formData.weight) newErrors.weight = 'Cân nặng là bắt buộc';
+    //     if (!formData.height) newErrors.height = 'Chiều cao là bắt buộc';
+    //     if (!formData.temperature) newErrors.temperature = 'Nhiệt độ là bắt buộc';
+    //     if (!formData.breathingRate) newErrors.breathingRate = 'Nhịp thở là bắt buộc';
+    //     if (!formData.pulse) newErrors.pulse = 'Mạch là bắt buộc';
+    //     if (!formData.bloodPressure) newErrors.bloodPressure = 'Huyết áp là bắt buộc';
+    //     return newErrors;
+    // };
     const formatDate = (date) => {
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
@@ -106,82 +178,78 @@ const HealthForm = () => {
         return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
     };
 
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSaveAndPrint = () => {
-        const newErrors = validateForm();
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-        } else {
-            const end = new Date();
-            setEndTime(end);
-            // Show modal for confirmation
-            if (window.confirm("Xác nhận lưu và in phiếu?")) {
-                alert(`Lưu thành công!\nThời gian bắt đầu:  ${formatDate(startTime)}\nThời gian kết thúc: ${formatDate(end)}`);;
-            }
-        }
+    const handleChiSoChange = (e) => {
+        const { name, value } = e.target;
+        setChiSo({...chisoSK,[name]: value})
     };
+   
+    const handleSaveAndPrint = async () => {
+        try {
+            const ds_dich_vu = services.map(item => item.dich_vu_id);
+            console.log("Danh sách dịch vụ:", ds_dich_vu);
+      
+            const payload = {
+                ...formData,
+                nguoi_dung_id: userId,
+                don_tiep_nhan_id: donTNId,
+                ds_dich_vu_ids: ds_dich_vu
+            };
+            console.log("Payload gửi lên:", payload);
+      
+            const baResponse = await createBA(payload);
+            alert('Tạo bệnh án thành công!');
+            console.log("Response bệnh án:", baResponse.data);
+      
+            const benhAnId = baResponse.data.benh_an_id;
 
+      
+            const cssk = {
+                ...chisoSK,
+                benh_an_id: benhAnId
+            };
+            console.log("Payload chỉ số sức khỏe:", cssk);
+      
+            const csskResponse = await createChiSo(cssk);
+            console.log("Response chỉ số sức khỏe:", csskResponse.data);
+            alert('Cập nhật chỉ số sức khỏe thành công!');
+            const benhNhanId = patientData.benhNhanId
+            navigator(`/prescription-form/${benhAnId}`, { state: { benhNhanId } });
+        } catch (error) {
+            console.error("Đã xảy ra lỗi:", error);
+            alert(`Có lỗi xảy ra: ${error.message}`);
+        }
+      };
     const handleCancel = () => {
-        if (window.confirm("Xác nhận hủy đơn khám bệnh?")) {
-            setFormData({
-                weight: '',
-                height: '',
-                temperature: '',
-                breathingRate: '',
-                pulse: '',
-                bloodPressure: '',
-                reason: '',
-                medicalHistory: '',
-                preliminaryDiagnosis: '',
-                generalExamination: '',
-                specificExamination: '',
-                service: '',
-                summary: '',
-            });
-        }
-    };
-
-    const [services, setServices] = useState([
-        { id: 1, name: "", type: ""},
-      ]);
-
-      const handleServiceChange = (id, field, value) => {
-            const updateServices = services.map((med) => {
-              if (med.id === id) {
-                const service = serviceData.find((d) => d.name === value);
-                return {
-                  ...med,
-                  [field]: value,
-                };
-              }
-              return med;
-            });
-            setServices(updateServices);
-          };
-    const addService = () => {
-        const newServices = {
-          id: services.length + 1,
-          name: "",
-          type: "",
-        };
-        setServices([...services, newServices]);
-      };
+        // try {
+        //     const cssk = {
+        //         ...chisoSK,
+        //         benh_an_id: 1,
+        //     };
+        //     console.log("Payload chỉ số sức khỏe:", cssk);
     
-      // Xóa khối
-      const removeServices = (id) => {
-        const updateServices = services
-          .filter((med) => med.id !== id)
-          .map((med, index) => ({
-            ...med,
-            id: index + 1, // Cập nhật lại STT
-          }));
-        setServices(updateServices);
-      };
+        //     createChiSo(cssk)
+        //         .then((csskResponse) => {
+        //             alert('Cập nhật chỉ số sức khỏe thành công!');
+        //             console.log("Response chỉ số sức khỏe:", csskResponse.data);
+        //         })
+        //         .catch((error) => {
+        //             console.error("Đã xảy ra lỗi khi cập nhật chỉ số sức khỏe:", error);
+        //             alert(`Có lỗi xảy ra: ${error.message}`);
+        //         });
+        // } catch (error) {
+        //     console.error("Đã xảy ra lỗi ngoài dự kiến:", error);
+        //     alert(`Có lỗi xảy ra: ${error.message}`);
+        // }
+    };
+      console.log(patientData)
+      if (!patientData) {
+        return <div>Dữ liệu không tồn tại</div>;
+      }
     
     return (
         <div className={styles.healthForm}>
@@ -190,19 +258,19 @@ const HealthForm = () => {
                     <h3 className={styles.formSectionTitle}>Thông tin bệnh nhân</h3>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Mã BN:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].id} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.id} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Họ và tên:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].name} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.name} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Ngày sinh:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].dob} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.dob} readOnly />
                     </div>
                     <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                         <label className={styles.formLabel}>Giới tính:</label>
-                        <input className={styles.formInput} type="text" value={patientData[0].gender} readOnly />
+                        <input className={styles.formInput} type="text" value={patientData.gender} readOnly />
                     </div>
                 </div>
 
@@ -210,16 +278,16 @@ const HealthForm = () => {
                     <div className={styles.formSection} style={{ fontSize: '14px', width: '100%' , padding: '10px 20px', backgroundColor:'#588ad726'}}>
                         <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                             <label className={styles.formLabel}>Phòng khám:</label>
-                            <input className={styles.formInput} type="text" value={clinicData[0].department} readOnly />
+                            <input className={styles.formInput} type="text" value={patientData.room} readOnly />
                         </div>
                         <div className={styles.formGroup} style={{ marginBottom: "8px" }}>
                             <label className={styles.formLabel}>Bác sĩ thực hiện:</label>
-                            <input className={styles.formInput} type="text" value={clinicData[0].doctorName} readOnly />
+                            <input className={styles.formInput} type="text" value={patientData.doctor} readOnly />
                         </div>
                         <div className={styles.formGroup} style={{ marginBottom: "8px", alignItems:"stretch" }}>
                             <label className={styles.formLabel}>Thời gian bắt đầu khám:</label>
                             <p className={styles.formSectionP}> {formatDate(startTime)}</p>
-                            {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>}
+                            {/* {endTime && <p>Thời gian kết thúc khám: {formatDate(endTime)}</p>} */}
                         </div>
                     </div>
                     <div className={styles.buttons}>
@@ -248,84 +316,83 @@ const HealthForm = () => {
                         <input
                             type="text"
                             placeholder="kg"
-                            name="weight"
-                            value={formData.weight}
-                            onChange={handleInputChange}
+                            name="can_nang"
+                            value={chisoSK.can_nang}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.weight && <span className={styles.error}>{errors.weight}</span>}
+                        {/* {errors.weight && <span className={styles.error}>{errors.weight}</span>} */}
                     </div>
                     <div className={styles.formColumn}>
                         <label>Chiều cao (cm)</label>
                         <input
                             type="text"
                             placeholder="cm"
-                            name="height"
-                            value={formData.height}
-                            onChange={handleInputChange}
+                            name="chieu_cao"
+                            value={chisoSK.chieu_cao}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.height && <span className={styles.error}>{errors.height}</span>}
+                        {/* {errors.height && <span className={styles.error}>{errors.height}</span>} */}
                     </div>
                     <div className={styles.formColumn}>
                         <label>Nhiệt độ (*C)</label>
                         <input
                             type="text"
                             placeholder="°C"
-                            name="temperature"
-                            value={formData.temperature}
-                            onChange={handleInputChange}
+                            name="nhiet_do"
+                            value={chisoSK.nhiet_do}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.temperature && <span className={styles.error}>{errors.temperature}</span>}
+                        {/* {errors.temperature && <span className={styles.error}>{errors.temperature}</span>} */}
                     </div>
                     <div className={styles.formColumn}>
                         <label>Nhịp thở</label>
                         <input
                             type="text"
                             placeholder="lần/phút"
-                            name="breathingRate"
-                            value={formData.breathingRate}
-                            onChange={handleInputChange}
+                            name="nhip_tho"
+                            value={chisoSK.nhip_tho}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.breathingRate && <span className={styles.error}>{errors.breathingRate}</span>}
+                        {/* {errors.breathingRate && <span className={styles.error}>{errors.breathingRate}</span>} */}
                     </div>
                     <div className={styles.formColumn}>
                         <label>Mạch</label>
                         <input
                             type="text"
                             placeholder="lần/phút"
-                            name="pulse"
-                            value={formData.pulse}
-                            onChange={handleInputChange}
+                            name="mach"
+                            value={chisoSK.mach}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.pulse && <span className={styles.error}>{errors.pulse}</span>}
+                        {/* {errors.pulse && <span className={styles.error}>{errors.pulse}</span>} */}
                     </div>
                     <div className={styles.formColumn}>
                         <label>Huyết áp</label>
                         <input
                             type="text"
-                            name="bloodPressure"
-                            value={formData.bloodPressure}
-                            onChange={handleInputChange}
+                            name="huyet_ap"
+                            value={chisoSK.huyet_ap}
+                            onChange={handleChiSoChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.bloodPressure && <span className={styles.error}>{errors.bloodPressure}</span>}
+                        {/* {errors.bloodPressure && <span className={styles.error}>{errors.bloodPressure}</span>} */}
                     </div>
-                    <div className={styles.formColumn}>
+                    {/* <div className={styles.formColumn}>
                         <label>SPO2</label>
                         <input
                             type="text"
                             name="spo2"
                             placeholder="%"
-                            value={formData.spo2}
+                            value={chisoSK.spo2}
                             onChange={handleInputChange}
                             className={styles.formGroupInput}
                         />
-                        {errors.spo2 && <span className={styles.error}>{errors.spo2}</span>}
-                    </div>
+                    </div> */}
                 </div>
                 <div className={styles.formFlexGroup}>
                     <div className={styles.formFlexGroupA}>
@@ -335,7 +402,7 @@ const HealthForm = () => {
                                 type="text"
                                 name="reason"
                                 disabled
-                                value={formData.reason}
+                                value={patientData.reason}
                                 style={{ backgroundColor:"#E3F5FF"}}
                             />
                         </div>
@@ -343,8 +410,8 @@ const HealthForm = () => {
                             <label>Tiền sử bệnh</label>
                             <input
                                 type="text"
-                                name="medicalHistory"
-                                value={formData.medicalHistory}
+                                name="tienSuBenh"
+                                value={formData.tienSuBenh}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -352,8 +419,8 @@ const HealthForm = () => {
                             <label>Chẩn đoán ban đầu</label>
                             <input
                                 type="text"
-                                name="preliminaryDiagnosis"
-                                value={formData.preliminaryDiagnosis}
+                                name="chuanDoan"
+                                value={formData.chuanDoan}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -363,8 +430,8 @@ const HealthForm = () => {
                             <label>Khám toàn thân</label>
                             <input
                                 type="text"
-                                name="generalExamination"
-                                value={formData.generalExamination}
+                                name="khamTT"
+                                value={formData.khamTT}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -372,12 +439,15 @@ const HealthForm = () => {
                             <label>Khám bộ phận</label>
                             <input
                                 type="text"
-                                name="specificExamination"
-                                value={formData.specificExamination}
+                                name="khamBP"
+                                value={formData.khamBP}
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div className={styles.FormThuoc} style={{ display: 'block,',marginBottom:'26px' }}>
+                        <div
+                        className={styles.FormThuoc}
+                        style={{ display: "block", marginBottom: "26px" }}
+                        >
                         <label className={styles.FormThuocLable}>Chỉ định dịch vụ</label>
                         {services.map((service, index) => (
                             <div className={styles.boxService} key={service.id}>
@@ -392,38 +462,47 @@ const HealthForm = () => {
                                     InputProps={{
                                     style: {
                                         fontSize: "15px",
-                                        backgroundColor: '#fff',
+                                        backgroundColor: "#fff",
                                     },
                                     }}
                                 />
                                 </Grid>
 
-                                {/* Tên dịch vụ (Autocomplete) */}
                                 <Grid item xs={6}>
-                                <Autocomplete
-                                    options={serviceData}
-                                    getOptionLabel={(option) => option.name}
-                                    value={serviceData.find((d) => d.name === service.name) || null}
-                                    onChange={(e, newValue) =>
-                                        handleServiceChange(service.id, "name", newValue?.name || "")
-                                    }
-                                    renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="🔍 Tên dịch vụ"
-                                        fullWidth
-                                        variant="outlined"
-                                        InputProps={{
-                                        ...params.InputProps,
-                                        style: {
-                                            fontSize: "15px",
-                                            backgroundColor: '#fff',
-                                        },
-                                        }}
-                                    />
-                                    )}
-                                />
-                                </Grid>
+                                {/* <FormControl fullWidth variant="outlined">
+                                    <Select
+                                        // value={serviceData.find((d) => d.dich_vu_id === service.dich_vu_id)?.dich_vu_id || ""}
+                                        value={service.dich_vu_id ||""}
+                                        onChange={(e) => handleServiceChange(service.id, "dich_vu_id", e.target.value)}
+                                    >
+                                        <MenuItem value="" disabled>
+                                        Chọn dịch vụ
+                                    </MenuItem>
+                                        {serviceData.map((serviceItem) => (
+                                            <MenuItem key={serviceItem.dich_vu_id} value={serviceItem.dich_vu_id}>
+                                                {serviceItem.ten}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl> */}
+                                <FormControl fullWidth variant="outlined">
+                                <Select
+                                    value={service.dich_vu_id || ""}
+                                    onChange={(e) => handleServiceChange(service.id, "dich_vu_id", e.target.value)}
+                                >
+                                    <MenuItem value="" disabled>
+                                        Chọn dịch vụ
+                                    </MenuItem>
+                                    {serviceData[service.id]?.map((serviceItem) => (
+                                        <MenuItem key={serviceItem.dich_vu_id} value={serviceItem.dich_vu_id}>
+                                            {serviceItem.ten}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                            </Grid>
+
 
                                 {/* Loại (Select) */}
                                 <Grid item xs={4}>
@@ -431,59 +510,59 @@ const HealthForm = () => {
                                     <Select
                                     value={service.type || ""}
                                     onChange={(e) =>
-                                        handleServiceChange(service.id, "type", e.target.value)
+                                        handleTypeChange(service.id, e.target.value)
                                     }
                                     displayEmpty
                                     style={{
                                         fontSize: "15px",
-                                        backgroundColor: '#fff',
+                                        backgroundColor: "#fff",
                                     }}
                                     >
-                                         {/* Placeholder */}
-      <MenuItem value="" disabled>
-        Chọn loại dịch vụ
-      </MenuItem>
+                                    <MenuItem value="" disabled>
+                                        Chọn loại dịch vụ
+                                    </MenuItem>
                                     {typeService.map((option, index) => (
-                                        <MenuItem key={index} value={option.name}>
-                                        {option.name}
+                                        <MenuItem key={option.loai_dich_vu_id} value={option.loai_dich_vu_id}>
+                                        {option.ten}
                                         </MenuItem>
                                     ))}
                                     </Select>
                                 </FormControl>
                                 </Grid>
+
                                 {/* Nút Xóa */}
                                 {index !== 0 && (
-                                    <Grid item xs={1}>
+                                <Grid item xs={1}>
                                     <IconButton
-                                        onClick={() => removeServices(service.id)}
-                                        color="error"
+                                    onClick={() => removeServices(service.id)}
+                                    color="error"
                                     >
-                                        <MdDelete />
+                                    <MdDelete />
                                     </IconButton>
-                                    </Grid>
-                                )}
                                 </Grid>
+                                )}
+                            </Grid>
                             </div>
-                            ))}
+                        ))}
 
-                            {/* Thêm khối mới */}
-                            <Button
-                                startIcon={<MdAdd />}
-                                variant="contained"
-                                color="primary"
-                                onClick={addService}
-                                style={{ marginTop: "16px" }}
-                            >
-                                Thêm dịch vụ
-                            </Button>
+                        {/* Thêm khối mới */}
+                        <Button
+                            startIcon={<MdAdd />}
+                            variant="contained"
+                            color="primary"
+                            onClick={addService}
+                            style={{ marginTop: "16px" }}
+                        >
+                            Thêm dịch vụ
+                        </Button>
                         </div>
                         </div>
                     </div>
                 <div className={styles.formGroup}>
                     <label>Tóm tắt kết quả khám bệnh</label>
                     <textarea
-                        name="summary"
-                        value={formData.summary}
+                        name="ket_luan"
+                        value={formData.ket_luan}
                         onChange={handleInputChange}
                     />
                 </div>
@@ -491,6 +570,5 @@ const HealthForm = () => {
         </div>
     );
 };
-
 export default HealthForm;
 

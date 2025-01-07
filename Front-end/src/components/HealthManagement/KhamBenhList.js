@@ -4,87 +4,50 @@ import { FaTrash, FaPencilAlt } from 'react-icons/fa'; // Import thêm icon bút
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS của DatePicker
 import styles from '../../css/ReceptionManage/ReceptionList.module.css';
-import { Navigate, useNavigate } from 'react-router-dom';
-import {getInvoiceByCCCD} from '../Services/LeTanService'
+import { useNavigate } from 'react-router-dom';
+import { getAllDon } from '../Services/BacSiService';
 import { Link } from 'react-router-dom';
 
-const InvoiceList = () => {
+const KhamBenhList = () => {
   const navigator = useNavigate();
   const [filters, setFilters] = useState({
+    fromDate: null, 
+    toDate: null,
     searchPatient: '',
   });
 
-  const [currentPage, setCurrentPage] = useState(1); // Quản lý trang hiện tại
-  const itemsPerPage = 5; // Số lượng bản ghi mỗi trang
-  // const [invoiceList, setInvoiceList] = useState([]);
-
-  const [receptionList, setReceptionList] = useState([
-    // Dữ liệu giả lập như ban đầu
-    // {
-    //   id: 1,
-    //   invoiceCode: 'HD097',
-    //   patientName: 'Vũ Thị Lan',
-    //   birthDate: '15/03/1980',
-    //   gender: 'Nam',
-    //   tongTien: '2.000.000',
-    //   status: 'Chưa thanh toán'
-    // },
-
-  ]);
-
-  const [data, setData] = useState({
-    cccd: '123456789012'
-  })
-
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 5; 
+  const [receptionList, setReceptionList] = useState([])
 
   useEffect(() => {
-    const fetchInvoiceList = async () => {
+    const fetchPatients = async () => {
       try {
-        const response = await getInvoiceByCCCD(data);
+        const response = await getAllDon();
         console.log(response.data)
-        const test = response.data.map((item, index) => ({
+        const data = response.data.map((item, index) => ({
           stt: index + 1,
-          invoiceCode: `HD${String(item.hoa_don_id).padStart(4, '0')}`,
-          patientName: item.don_thuoc.benh_an.don_tiep_nhan.benh_nhan.ten,
-          birthDate: formatDate(item.don_thuoc.benh_an.don_tiep_nhan.benh_nhan.ns),
-          gender: item.don_thuoc.benh_an.don_tiep_nhan.benh_nhan.gioi_tinh,
-          tongTien: item.tong_tien - item.giam_gia,
-          status: item.trang_thai_hd.ten,
-          idHD:item.hoa_don_id
+          patientCode: `BN${String(item.benh_nhan.nguoi_dung_id).padStart(4, '0')}`,
+          patientName: item.benh_nhan.ten,
+          receptionCode: `TN${String(item.don_tiep_nhan_id).padStart(4, '0')}`,
+          receptionTime: formatDate(item.thoiGian),
+          room: item.phong_kham.ten,
+          status: item.trang_thai_don.ten,
+          receptionId: item.don_tiep_nhan_id
         }));
-        console.log(test);
-        setReceptionList(test);  // Gán danh sách hóa đơn vào state
+        setReceptionList(data);
+        // setFilteredPatients(data);
       } catch (error) {
-        console.error('Lỗi khi lấy danh sách hóa đơn:', error);
+        console.error('Lỗi khi lấy danh sách bệnh nhân:', error);
       }
     };
 
-    // Gọi hàm lấy hóa đơn khi component render
-    fetchInvoiceList();
-  }, []); 
+    fetchPatients();
+  }, []);
 
-const handleViewDetail = () => {
-    navigator('/invoice-form');
-  };
-
-  const handleFilterChange = (field, value) => {
-    setFilters({ ...filters, [field]: value });
-  };
-
-  const handleSearch = () => {
-    const { searchPatient } = filters;
-    let filteredList = [...receptionList];
+  console.log(receptionList)
 
 
-    if (searchPatient) {
-      filteredList = filteredList.filter((item) =>
-        item.patientName.toLowerCase().includes(searchPatient.toLowerCase())
-      );
-    }
-
-    setReceptionList(filteredList);
-    setCurrentPage(1); // Reset về trang đầu tiên
-  };
   function formatDate(dateString) {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -92,7 +55,41 @@ const handleViewDetail = () => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  // Phân trang
+  
+
+  const handleFilterChange = (field, value) => {
+    setFilters({ ...filters, [field]: value });
+  };
+
+  // const handleSearch = () => {
+  //   const { fromDate, toDate, searchPatient } = filters;
+  //   let filteredList = [...receptionList];
+
+  //   if (fromDate && !toDate) {
+  //     filteredList = filteredList.filter(
+  //       (item) => new Date(item.receptionTime) >= fromDate
+  //     );
+  //   } else if (!fromDate && toDate) {
+  //     alert('Chưa chọn ngày bắt đầu');
+  //     return;
+  //   } else if (fromDate && toDate) {
+  //     filteredList = filteredList.filter(
+  //       (item) =>
+  //         new Date(item.receptionTime) >= fromDate &&
+  //         new Date(item.receptionTime) <= toDate
+  //     );
+  //   }
+
+  //   if (searchPatient) {
+  //     filteredList = filteredList.filter((item) =>
+  //       item.patientName.toLowerCase().includes(searchPatient.toLowerCase())
+  //     );
+  //   }
+
+  //   setReceptionList(filteredList);
+  //   setCurrentPage(1); 
+  // };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = receptionList.slice(indexOfFirstItem, indexOfLastItem);
@@ -110,19 +107,33 @@ const handleViewDetail = () => {
     }
   };
 
-
-  const viewDetail = (id) => {
-    navigator(`/invoice-form/${id}`)
-  }
-  const editDetail = (id) => {
-    navigator(`/edit-invoice-form/${id}`)
-  }
-  
+  // const handleViewDetail = (id) => {
+  //   navigator(`/view-don/${id}`); 
+  // };
 
   return (
     <div className={styles.receptionList}>
-      {/* Phần 1: Bộ lọc */}
       <div className={styles.filterSection}>
+        <div>
+          <label>Từ ngày</label>
+          <DatePicker
+            selected={filters.fromDate}
+            onChange={(date) => handleFilterChange('fromDate', date)}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="dd/mm/yyyy"
+            className={styles.filterDate}
+          />
+        </div>
+        <div>
+          <label>Đến ngày</label>
+          <DatePicker
+            selected={filters.toDate}
+            onChange={(date) => handleFilterChange('toDate', date)}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="dd/mm/yyyy"
+            className={styles.filterDate}
+          />
+        </div>
         <div className={styles.filterName}>
           <label>Tìm kiếm BN</label>
           <input
@@ -136,21 +147,22 @@ const handleViewDetail = () => {
             className={styles.filterDate}
           />
         </div>
-        <button className={styles.searchButton} onClick={handleSearch}>
+        <button className={styles.searchButton} 
+        // onClick={handleSearch}
+        >
           <i className="fa fa-search" /> Tìm kiếm
         </button>
       </div>
 
-      {/* Phần 2: Bảng danh sách */}
       <table className={styles.listTable}>
         <thead>
           <tr>
             <th>STT</th>
-            <th>Mã hóa đơn</th>
+            <th>Mã bệnh nhân</th>
             <th>Họ và tên</th>
-            <th>Ngày sinh</th>
-            <th>Giới tính</th>
-            <th>Tổng thanh toán</th>
+            <th>Mã đơn tiếp nhận</th>
+            <th>Thời gian tiếp nhận</th>
+            <th>Phòng khám</th>
             <th>Chi tiết</th>
             <th>Trạng thái</th>
           </tr>
@@ -166,22 +178,19 @@ const handleViewDetail = () => {
                 }}
               >
                 <td>{indexOfFirstItem + index + 1}</td>
-                <td>{item.invoiceCode}</td>
+                <td>{item.patientCode}</td>
                 <td>{item.patientName}</td>
-                <td>{item.birthDate}</td>
-                <td>{item.gender}</td>
-                <td>{item.tongTien}</td>
+                <td>{item.receptionCode}</td>
+                <td>{item.receptionTime}</td>
+                <td>{item.room}</td>
                 <td>
-                  
-                    <Link to={`/invoice-form/${item.idHD}`}>Xem</Link>
-                
+                  <Link to={`/view-don/${item.receptionId}`}>Xem</Link>
                 </td>
+                
                 <td
                   style={{
                     color:
-                      item.status === 'Chưa thanh toán'
-                        ? 'blue'
-                        : 'green',
+                    '#ff5200'
                   }}
                 >
                   {item.status}
@@ -212,5 +221,5 @@ const handleViewDetail = () => {
   );
 };
 
-export default InvoiceList;
+export default KhamBenhList;
 
